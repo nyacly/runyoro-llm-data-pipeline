@@ -1,0 +1,14 @@
+
+This is a template for processed audio segments. Each segment will be a clean, standardized WAV file, ready for ASR transcription. The actual files will be located in the `processed_data/processed_audio/` directory.
+
+Example naming convention:
+`original_audio_file_name_segment_X.wav`
+
+Associated metadata (stored in `processed_data_metadata.json`) will include:
+- `path`: Path to the WAV file
+- `original_path`: Path to the original raw audio/video file
+- `segment_index`: Index of the segment within the original file
+- `data_type`: "audio_segment" or "audio_segment_from_video"
+- `timestamp`: Processing timestamp
+
+

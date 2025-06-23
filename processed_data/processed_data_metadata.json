@@ -1,0 +1,35 @@
+[
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/RUNYORO-RUTOORO-RADIO-SCRIPT.pdf",
+        "original_source_hash": "339e11a80528ac2935d90be4fb1937ec",
+        "processed_path": "./processed_data/processed_text/RUNYORO-RUTOORO-RADIO-SCRIPT_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio",
+        "original_source": "./raw_data/Rutooro_Love_Tooro_Artist.mp3",
+        "original_source_hash": "4ceeda25be47312942dc117f0a425732",
+        "processed_path": "./processed_data/processed_audio/Rutooro_Love_Tooro_Artist_segment_0.wav",
+        "segment_index": 0,
+        "data_type": "audio_segment",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "website_static",
+        "original_source": "https://www.w3schools.com/howto/howto_website_static.asp",
+        "original_source_hash": null,
+        "processed_path": "./processed_data/processed_text/www.w3schools.com_howto_howto_website_static_website_static.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "text_file",
+        "original_source": "./raw_data/w3schools_static_website_example.txt",
+        "original_source_hash": "cf483bb1627f565c0a7dfdfa147e82d7",
+        "processed_path": "./processed_data/processed_text/w3schools_static_website_example_text_file.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    }
+]
