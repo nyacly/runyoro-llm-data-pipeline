@@ -98,6 +98,52 @@ For cloud environments, the setup process is similar but often simpler due to pr
 4.  **Data Upload**: Upload your raw data to the Space's data directory.
 5.  **Run the Pipeline**: Configure your Space's `app.py` or a custom script to run the `orchestrator.py` or `test_pipeline.py` script upon launch or via a Gradio/Streamlit interface.
 
+## Data Input and Expected Output
+
+### Input Data (`raw_data/`)
+
+Place your raw, unprocessed data files into the `raw_data/` directory. The pipeline supports the following data types:
+
+*   **PDFs (`.pdf`)**: Documents containing text and/or images.
+*   **Images (`.png`, `.jpg`, `.jpeg`, etc.)**: Image files from which text can be extracted using OCR.
+*   **Audio Files (`.mp3`, `.wav`, `.flac`, etc.)**: Audio recordings for transcription or further audio processing.
+*   **Video Files (`.mp4`, `.avi`, `.mov`, etc.)**: Video files from which audio tracks can be extracted.
+*   **Text Files (`.txt`)**: Plain text documents.
+*   **Website URLs**: You can provide a list of URLs (static or dynamic) within a text file, or directly pass them to the `process_data_source` function.
+
+### Expected Output (`processed_data/`)
+
+After running the pipeline, the `processed_data/` directory will contain the cleaned and structured data, organized into subdirectories based on the processed data type:
+
+*   `processed_data/processed_text/`: Contains `.txt` files with extracted and cleaned text from PDFs, images, text files, and websites. Each file will correspond to a processed text source.
+*   `processed_data/processed_audio/`: Contains `.wav` files of standardized audio segments extracted from raw audio files.
+*   `processed_data/processed_audio_from_video/`: Contains `.wav` files of standardized audio segments extracted from video files.
+*   `processed_data/processed_data_metadata.json`: A JSON file that stores metadata for all processed items, including their original source, hash (for deduplication), processed path, data type, and timestamp. This file is crucial for tracking processed data and preventing duplicates.
+
+## Using Processed Data for LLM Training
+
+The data generated in the `processed_data/` directory is now in a format suitable for various stages of LLM training:
+
+1.  **Text Data (`processed_data/processed_text/`)**: These `.txt` files contain clean, preprocessed text. They can be directly used for:
+    *   **Pre-training**: For training a new LLM from scratch on the Runyoro/Rutooro language, or for continued pre-training of an existing multilingual LLM to adapt it to Runyoro/Rutooro.
+    *   **Fine-tuning**: For task-specific fine-tuning (e.g., text generation, summarization, translation) once a base LLM is available.
+    *   **Corpus Building**: To build a comprehensive text corpus for language modeling research.
+
+2.  **Audio Data (`processed_data/processed_audio/` and `processed_data/processed_audio_from_video/`)**: These `.wav` files represent clean audio segments. They are primarily used for:
+    *   **Speech-to-Text (STT) Model Training**: To train or fine-tune an STT model specifically for Runyoro/Rutooro. The audio segments can be paired with their corresponding text transcriptions (which you would generate separately, perhaps using a small initial STT model or manual transcription, and then integrate into the metadata).
+    *   **Voice Activity Detection (VAD)**: The standardized audio can be used to train VAD models to identify speech segments more accurately.
+
+3.  **Metadata (`processed_data/processed_data_metadata.json`)**: This file serves as a central registry for your dataset. It can be parsed to:
+    *   **Manage Dataset Versions**: Track which sources have been processed.
+    *   **Create Training Manifests**: Generate manifest files (e.g., CSV, JSONL) that link audio files to their transcriptions, or text files to their source metadata, which are commonly required by LLM and STT training frameworks (e.g., Hugging Face `datasets` library, PyTorch Lightning DataModules).
+    *   **Filter and Select Data**: Easily filter data based on source type, processing status, or other metadata fields for specific training tasks.
+
+**Workflow for LLM Training:**
+
+*   **Initial STT Model (MVP)**: Start with a small subset of transcribed audio (manual or semi-automated) to train a basic STT model. This model can then be used to bootstrap transcription of larger audio datasets.
+*   **Iterative Data Curation**: As more audio is transcribed and text is extracted, continuously feed this data back into the pipeline. The deduplication feature ensures efficient processing of new data.
+*   **LLM Adaptation**: Use the growing Runyoro/Rutooro text corpus to pre-train or fine-tune an LLM. Consider using transfer learning from a large multilingual model if starting from scratch is too resource-intensive.
+
 ## Pipeline Components
 
 Refer to the individual Python files in the `scripts/` directory for detailed information on each component:
@@ -112,4 +158,5 @@ Refer to the individual Python files in the `scripts/` directory for detailed in
 ## Contributing
 
 Contributions are welcome! Please feel free to open issues or submit pull requests.
+
 
