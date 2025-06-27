@@ -1,25 +1,27 @@
-# Runyoro/Rutooro LLM Data Processing Pipeline
+# Runyoro/Rutooro LLM Data Processing and Training Pipeline
 
-This repository contains the implementation of a data processing pipeline for the Runyoro/Rutooro LLM project. The pipeline is designed to ingest and preprocess various data sources, including PDFs, images, websites, audio files, and video files, to prepare them for training a Large Language Model (LLM) in Runyoro/Rutooro.
+This repository contains a comprehensive pipeline for processing diverse data sources and training a Large Language Model (LLM) for the Runyoro/Rutooro language. It handles data ingestion, preprocessing, and then facilitates the training and evaluation of an LLM.
 
 ## Project Structure
 
 - `raw_data/`: Directory for raw, unprocessed data.
 - `processed_data/`: Directory for processed and cleaned data, ready for LLM training.
-- `scripts/`: Contains Python scripts for different stages of the pipeline.
+- `scripts/`: Contains Python scripts for different stages of the pipeline, including data processing, LLM training, and testing.
+- `models/`: Directory to store trained LLM models.
+- `configs/`: (Optional) Configuration files for training parameters.
 - `docs/`: Documentation related to the pipeline.
 - `requirements.txt`: Lists all Python dependencies.
 
 ## Getting Started
 
-This guide provides step-by-step instructions on how to set up and use this data processing pipeline on both a local MacBook Pro M4 and cloud environments like Google Colab or Hugging Face.
+This guide provides step-by-step instructions on how to set up and use this data processing and training pipeline on both a local MacBook Pro M4 and cloud environments like Google Colab or Hugging Face.
 
 ### Prerequisites
 
 Before you begin, ensure you have the following installed:
 
 *   **Git**: For cloning the repository.
-*   **Python 3.8+**: The pipeline is developed with Python 3.8 and above.
+*   **Python 3.8+**: The scripts are developed with Python 3.8 and above.
 *   **pip**: Python package installer (usually comes with Python).
 
 ### 1. Local Setup (MacBook Pro M4)
@@ -49,11 +51,11 @@ This pipeline relies on external tools for PDF processing (Poppler), OCR (Tesser
 brew install poppler tesseract ffmpeg
 ```
 
-#### 1.4. Run the Pipeline
+#### 1.4. Run the Data Processing Pipeline
 
 Place your raw data (PDFs, images, audio, video, text files, or a list of URLs for websites) into the `raw_data/` directory. Then, you can run the `orchestrator.py` script to process your data. The `test_pipeline.py` script provides an example of how to use the orchestrator.
 
-To run the example pipeline:
+To run the example data processing pipeline:
 
 ```bash
 python3 scripts/test_pipeline.py
@@ -63,11 +65,71 @@ This will process the sample data in `raw_data/` and save the processed outputs 
 
 To process your own data, you will need to modify `scripts/test_pipeline.py` or create a new script that calls the `process_data_source` function from `scripts/orchestrator.py` with your specific data paths and types.
 
-### 2. Cloud Setup (Google Colab / Hugging Face Spaces)
+### 2. LLM Training
+
+Once your data has been processed and is available in `processed_data/processed_text/`, you can proceed with training your LLM.
+
+#### 2.1. Run the Training Script
+
+The `scripts/train_llm.py` script is used to train the LLM. You can specify various parameters such as the path to your processed text data, the base model to use (e.g., `gpt2`), and the output directory for the trained model.
+
+```bash
+python3 scripts/train_llm.py \
+    --processed_data_path ./processed_data/processed_text \
+    --model_name gpt2 \
+    --output_dir ./models/runyoro_llm_model
+```
+
+**Key Parameters:**
+
+*   `--processed_data_path`: Path to the directory containing your processed `.txt` files (e.g., `./processed_data/processed_text`). Each `.txt` file will be treated as a document for training.
+*   `--model_name`: The name of a pre-trained model from Hugging Face Transformers to use as a base. For initial experimentation, `gpt2` is a good starting point. For low-resource languages, you might consider smaller models or multilingual models that can be further fine-tuned.
+*   `--output_dir`: The directory where the trained model and tokenizer will be saved.
+
+**Expected Results during Training:**
+
+During training, you will see logs indicating the progress, including:
+
+*   **Loss values**: These should generally decrease over time, indicating that the model is learning.
+*   **Evaluation metrics**: If `eval_steps` is set (within `scripts/train_llm.py`), the model will be evaluated periodically on a validation set, showing metrics like validation loss.
+*   **Model checkpoints**: Intermediate models will be saved in the `output_dir` at specified `save_steps`.
+
+Upon successful completion, a `final_model` directory will be created inside your specified `output_dir` (e.g., `./models/runyoro_llm_model/final_model`), containing the trained model weights and tokenizer files.
+
+### 3. Model Testing and Evaluation
+
+#### 3.1. Run the Testing Script
+
+The `scripts/test_llm.py` script allows you to test your trained LLM by generating text based on a given prompt.
+
+```bash
+python3 scripts/test_llm.py \
+    --model_path ./models/runyoro_llm_model/final_model \
+    --prompt "Ekiro kyona" \
+    --max_new_tokens 100
+```
+
+**Key Parameters:**
+
+*   `--model_path`: Path to the directory containing your trained model and tokenizer (the `final_model` directory from training).
+*   `--prompt`: An optional initial text prompt in Runyoro/Rutooro for the model to continue. If no prompt is provided, the model will generate text from scratch.
+*   `--max_new_tokens`: The maximum number of new tokens (words/subwords) the model should generate.
+
+**Expected Results from Testing:**
+
+The script will output the generated text sequences. The quality of the generated text will depend on:
+
+*   **Amount and quality of training data**: More diverse and relevant Runyoro/Rutooro text data will lead to better generation.
+*   **Training epochs**: Sufficient training time is crucial.
+*   **Model size and architecture**: Larger models generally capture more complex language patterns.
+
+Initially, with a small dataset and a base model like GPT-2, the generated text might not be perfectly coherent or grammatically correct in Runyoro/Rutooro. However, you should observe that the model starts to generate sequences that resemble the Runyoro/Rutooro language in terms of character patterns and some common words, indicating that it has learned from your data.
+
+### 4. Cloud Setup (Google Colab / Hugging Face Spaces)
 
 For cloud environments, the setup process is similar but often simpler due to pre-installed dependencies or easier installation methods.
 
-#### 2.1. Google Colab
+#### 4.1. Google Colab
 
 1.  **Open a New Colab Notebook**: Go to [Google Colab](https://colab.research.google.com/) and create a new notebook.
 2.  **Clone the Repository**: In a code cell, run:
@@ -84,19 +146,27 @@ For cloud environments, the setup process is similar but often simpler due to pr
     !sudo apt-get update
     !sudo apt-get install -y poppler-utils tesseract-ocr
     ```
-5.  **Upload Data**: You can upload your raw data directly to the `raw_data/` directory in Colab's file browser or mount your Google Drive.
-6.  **Run the Pipeline**: Execute the test script or your custom processing script:
+5.  **Upload Data**: If your raw data is in Google Drive, mount your Drive and copy/symlink the data to `raw_data/`:
     ```python
-    !python3 scripts/test_pipeline.py
+    from google.colab import drive
+    drive.mount("/content/drive")
+    !cp -r "/content/drive/MyDrive/path/to/your/raw_data/*" raw_data/
+    ```
+    Alternatively, upload directly to the `raw_data/` directory.
+6.  **Run the Pipeline (Processing, Training, Testing)**: Execute the scripts as described in sections 1.4, 2.1, and 3.1:
+    ```python
+    !python3 scripts/test_pipeline.py # For data processing
+    !python3 scripts/train_llm.py --processed_data_path ./processed_data/processed_text --model_name gpt2 --output_dir ./models/runyoro_llm_model
+    !python3 scripts/test_llm.py --model_path ./models/runyoro_llm_model/final_model --prompt "Ekiro kyona"
     ```
 
-#### 2.2. Hugging Face Spaces
+#### 4.2. Hugging Face Spaces
 
-1.  **Create a New Space**: Go to [Hugging Face Spaces](https://huggingface.co/spaces) and create a new Space. Choose a Docker-based template or a custom template if you need specific environments.
-2.  **Clone the Repository**: You can either directly link your Space to this GitHub repository or clone it within the Space's environment.
-3.  **Define Dependencies**: In your `Dockerfile` or `requirements.txt` (if using a Python template), ensure all Python and system dependencies (`poppler-utils`, `tesseract-ocr`, `ffmpeg`) are listed for installation.
-4.  **Data Upload**: Upload your raw data to the Space's data directory.
-5.  **Run the Pipeline**: Configure your Space's `app.py` or a custom script to run the `orchestrator.py` or `test_pipeline.py` script upon launch or via a Gradio/Streamlit interface.
+1.  **Create a New Space**: Go to [Hugging Face Spaces](https://huggingface.co/spaces) and create a new Space. Choose a Docker-based template or a custom template.
+2.  **Clone the Repository**: Link your Space to this GitHub repository.
+3.  **Define Dependencies**: Ensure `requirements.txt` is in your Space, and if using a Dockerfile, include commands to install system dependencies (e.g., `apt-get install ...`).
+4.  **Data Upload**: Upload your raw data to the Space's data directory or configure a persistent storage solution.
+5.  **Run the Pipeline**: Configure your Space's `app.py` or a custom script to run the processing, training, and testing scripts. For long-running training jobs, consider using Hugging Face's training APIs or a dedicated training infrastructure.
 
 ## Data Input and Expected Output
 
@@ -113,7 +183,7 @@ Place your raw, unprocessed data files into the `raw_data/` directory. The pipel
 
 ### Expected Output (`processed_data/`)
 
-After running the pipeline, the `processed_data/` directory will contain the cleaned and structured data, organized into subdirectories based on the processed data type:
+After running the data processing pipeline, the `processed_data/` directory will contain the cleaned and structured data, organized into subdirectories based on the processed data type:
 
 *   `processed_data/processed_text/`: Contains `.txt` files with extracted and cleaned text from PDFs, images, text files, and websites. Each file will correspond to a processed text source.
 *   `processed_data/processed_audio/`: Contains `.wav` files of standardized audio segments extracted from raw audio files.
@@ -153,7 +223,9 @@ Refer to the individual Python files in the `scripts/` directory for detailed in
 *   `scripts/audio_processing.py`: Manages audio standardization and segmentation.
 *   `scripts/video_processing.py`: Extracts and processes audio from video sources.
 *   `scripts/orchestrator.py`: The central script for managing the data flow, including duplicate detection and metadata management.
-*   `scripts/test_pipeline.py`: An example script to demonstrate the pipeline's functionality.
+*   `scripts/test_pipeline.py`: An example script to demonstrate the data processing pipeline's functionality.
+*   `scripts/train_llm.py`: The main script for training the LLM.
+*   `scripts/test_llm.py`: Script for testing the trained LLM by generating text.
 
 ## Contributing
 
