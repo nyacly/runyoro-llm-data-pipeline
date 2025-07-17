@@ -95,8 +95,10 @@ if __name__ == "__main__":
         "--processed_data_path",
         type=str,
         required=True,
-        help="Path to the directory containing processed text data (e.g., processed_data/processed_text).
-        Each .txt file in this directory will be treated as a document.",
+        help=(
+            "Path to the directory containing processed text data (e.g., processed_data/processed_text). "
+            "Each .txt file in this directory will be treated as a document."
+        ),
     )
     parser.add_argument(
         "--model_name",

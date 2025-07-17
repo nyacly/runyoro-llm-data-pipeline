@@ -53,17 +53,17 @@ brew install poppler tesseract ffmpeg
 
 #### 1.4. Run the Data Processing Pipeline
 
-Place your raw data (PDFs, images, audio, video, text files, or a list of URLs for websites) into the `raw_data/` directory. Then, you can run the `orchestrator.py` script to process your data. The `test_pipeline.py` script provides an example of how to use the orchestrator.
+Place your raw data (PDFs, images, audio, video, text files, or a list of URLs for websites) into the `raw_data/` directory. The repository now includes a convenience script that will iterate over everything in this folder and process it automatically.
 
-To run the example data processing pipeline:
+To run the data processing pipeline on all files in `raw_data/`:
 
 ```bash
-python3 scripts/test_pipeline.py
+python3 scripts/process_raw_data.py
 ```
 
-This will process the sample data in `raw_data/` and save the processed outputs in `processed_data/`.
+This script detects the file type (PDF, image, audio, video, or text) and calls the orchestrator accordingly. Processed outputs are saved in `processed_data/`, and metadata is written to `processed_data/processed_data_metadata.json`.
 
-To process your own data, you will need to modify `scripts/test_pipeline.py` or create a new script that calls the `process_data_source` function from `scripts/orchestrator.py` with your specific data paths and types.
+`scripts/test_pipeline.py` remains as a simple example showing how to call `process_data_source` directly if you need more control or want to integrate specific sources (like websites) manually.
 
 ### 2. LLM Training
 
