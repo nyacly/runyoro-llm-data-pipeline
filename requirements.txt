@@ -1,0 +1,15 @@
+
+PyPDF2
+Pillow
+pytesseract
+requests
+beautifulsoup4
+selenium
+webdriver-manager
+pydub
+librosa
+nltk
+ffmpeg-python
+soundfile
+
+

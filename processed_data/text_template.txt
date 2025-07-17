@@ -1,0 +1,8 @@
+
+This is a template for processed text data. It will contain clean, preprocessed text extracted from various sources (PDFs, images, websites, plain text files).
+
+Example content:
+
+"Ebyahandiikirwe ebya Ruhanga bikuru muno. Bitwegyesa ebyokukora ebirungi n'okwewaza ebibi."
+
+
