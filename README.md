@@ -63,6 +63,37 @@ python3 scripts/process_raw_data.py
 
 This script detects the file type (PDF, image, audio, video, or text) and calls the orchestrator accordingly. Processed outputs are saved in `processed_data/`, and metadata is written to `processed_data/processed_data_metadata.json`.
 
+#### Example: Processing an Audio/Text Pair Directory
+
+If you have a folder containing multiple audio files with matching transcript
+files, you can process the entire directory at once. The audio and text files
+must share the same base filename, such as `sample1.wav` and `sample1.txt`.
+
+```
+raw_data/test_audio_pairs/
+├── sample1.wav
+├── sample1.txt
+├── sample2.wav
+└── sample2.txt
+```
+
+To process this directory manually using the orchestrator:
+
+```python
+from scripts.orchestrator import process_data_source
+
+process_data_source(
+    "./raw_data/test_audio_pairs",
+    "audio_text_pair",
+    "./processed_data",
+    "./processed_data/processed_data_metadata.json",
+)
+```
+
+Each detected pair will appear in `processed_data_metadata.json` with a
+`pair_id` linking the processed audio segments to the corresponding transcript
+file, enabling easy alignment for STT model training.
+
 `scripts/test_pipeline.py` remains as a simple example showing how to call `process_data_source` directly if you need more control or want to integrate specific sources (like websites) manually.
 
 ### 2. LLM Training
@@ -179,7 +210,7 @@ Place your raw, unprocessed data files into the `raw_data/` directory. The pipel
 *   **Audio Files (`.mp3`, `.wav`, `.flac`, etc.)**: Audio recordings for transcription or further audio processing.
 *   **Video Files (`.mp4`, `.avi`, `.mov`, etc.)**: Video files from which audio tracks can be extracted.
 *   **Text Files (`.txt`)**: Plain text documents.
-*   **Audio-Text Pairs (directory)**: A directory containing an audio file and a text file with the transcript. The directory should contain one audio file and one text file.
+*   **Audio-Text Pairs (directory)**: A directory containing one or more audio files and matching `.txt` transcripts that share the same base filename (e.g. `sample.wav` and `sample.txt`).
 *   **Website URLs**: You can provide a list of URLs (static or dynamic) within a text file, or directly pass them to the `process_data_source` function.
 
 ### Expected Output (`processed_data/`)
@@ -189,7 +220,8 @@ After running the data processing pipeline, the `processed_data/` directory will
 *   `processed_data/processed_text/`: Contains `.txt` files with extracted and cleaned text from PDFs, images, text files, and websites. Each file will correspond to a processed text source.
 *   `processed_data/processed_audio/`: Contains `.wav` files of standardized audio segments extracted from raw audio files.
 *   `processed_data/processed_audio_from_video/`: Contains `.wav` files of standardized audio segments extracted from video files.
-*   `processed_data/processed_data_metadata.json`: A JSON file that stores metadata for all processed items, including their original source, hash (for deduplication), processed path, data type, and timestamp. This file is crucial for tracking processed data and preventing duplicates.
+*   `processed_data/audio_text_pair_template.txt`: Describes how processed audio/text pairs are structured.
+*   `processed_data/processed_data_metadata.json`: A JSON file that stores metadata for all processed items, including their original source, hash (for deduplication), processed path, data type, and timestamp. This file is crucial for tracking processed data and preventing duplicates. When processing audio-text pair folders, each entry includes a `pair_id` linking an audio file to its transcript.
 
 ## Using Processed Data for LLM Training
 

@@ -1,8 +1,27 @@
 import os
 import json
 import logging
+import wave
+import math
+import struct
 
 from scripts.orchestrator import process_data_source
+
+
+def _create_dummy_wav(path, duration_sec=1, freq=440, sample_rate=16000):
+    """Create a simple sine wave .wav file for testing."""
+    if os.path.exists(path):
+        return
+
+    n_samples = int(duration_sec * sample_rate)
+    amplitude = 32767
+    with wave.open(path, "w") as wf:
+        wf.setnchannels(1)
+        wf.setsampwidth(2)  # 16-bit audio
+        wf.setframerate(sample_rate)
+        for i in range(n_samples):
+            sample = int(amplitude * math.sin(2 * math.pi * freq * i / sample_rate))
+            wf.writeframes(struct.pack("<h", sample))
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -50,6 +69,17 @@ def run_pipeline_test():
     else:
         logging.warning(f"Text file not found: {text_file_path}")
 
+    # Test Audio/Text Pair directory processing
+    at_pair_dir = os.path.join(raw_data_dir, "test_audio_pairs")
+    if os.path.isdir(at_pair_dir):
+        # Create dummy audio files if they don't exist
+        _create_dummy_wav(os.path.join(at_pair_dir, "sample1.wav"))
+        _create_dummy_wav(os.path.join(at_pair_dir, "sample2.wav"), freq=660)
+        logging.info(f"\n--- Processing Audio/Text Pairs: {at_pair_dir} ---")
+        process_data_source(at_pair_dir, 'audio_text_pair', processed_data_dir, metadata_file)
+    else:
+        logging.warning(f"Audio/Text pair directory not found: {at_pair_dir}")
+
     logging.info("\n--- Pipeline Test Complete ---")
     logging.info(f"Check {processed_data_dir} for processed data and {metadata_file} for metadata.")
 
@@ -58,7 +88,15 @@ def run_pipeline_test():
         with open(metadata_file, "r", encoding="utf-8") as f:
             metadata = json.load(f)
             for entry in metadata:
-                logging.info(f"  - Source: {entry.get('original_source')}, Type: {entry.get('source_type')}, Processed Path: {entry.get('processed_path')}")
+                if entry.get("source_type") == "audio_text_pair":
+                    logging.info(
+                        f"  - Pair {entry.get('pair_id')}: {entry.get('processed_audio_paths')}"
+                        f" + {entry.get('processed_text_path')}"
+                    )
+                else:
+                    logging.info(
+                        f"  - Source: {entry.get('original_source')}, Type: {entry.get('source_type')}, Processed Path: {entry.get('processed_path')}"
+                    )
             logging.info(f"Metadata entries: {len(metadata)}")
     else:
         logging.error(f"Metadata file not found: {metadata_file}")
