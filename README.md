@@ -179,6 +179,7 @@ Place your raw, unprocessed data files into the `raw_data/` directory. The pipel
 *   **Audio Files (`.mp3`, `.wav`, `.flac`, etc.)**: Audio recordings for transcription or further audio processing.
 *   **Video Files (`.mp4`, `.avi`, `.mov`, etc.)**: Video files from which audio tracks can be extracted.
 *   **Text Files (`.txt`)**: Plain text documents.
+*   **Audio-Text Pairs (directory)**: A directory containing an audio file and a text file with the transcript. The directory should contain one audio file and one text file.
 *   **Website URLs**: You can provide a list of URLs (static or dynamic) within a text file, or directly pass them to the `process_data_source` function.
 
 ### Expected Output (`processed_data/`)

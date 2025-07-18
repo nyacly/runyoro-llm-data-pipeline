@@ -7,6 +7,7 @@ import requests
 from scripts.text_processing import process_text_source
 from scripts.audio_processing import process_audio_source
 from scripts.video_processing import process_video_source
+from scripts.audio_text_processing import process_audio_text_pair
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -48,10 +49,20 @@ def process_data_source(source_path_or_url, source_type, output_base_dir, metada
     original_source_content_hash = None
 
     if source_type in ["pdf", "image", "text_file", "audio", "video"]:
-        if os.path.exists(source_path_or_url):
-            original_source_content_hash = calculate_file_hash(source_path_or_url)
-        else:
+        if not os.path.exists(source_path_or_url):
             logging.error(f"File not found: {source_path_or_url}")
+            return []
+        original_source_content_hash = calculate_file_hash(source_path_or_url)
+    elif source_type == "audio_text_pair":
+        # For a directory, we'll create a hash of the file list as a simple way to check for changes.
+        try:
+            file_list = sorted(os.listdir(source_path_or_url))
+            hasher = hashlib.md5()
+            for filename in file_list:
+                hasher.update(filename.encode('utf-8'))
+            original_source_content_hash = hasher.hexdigest()
+        except OSError as e:
+            logging.error(f"Error reading directory {source_path_or_url}: {e}")
             return []
     elif source_type in ["website_static", "website_dynamic"]:
         original_source_identifier = get_canonical_url(source_path_or_url)
@@ -109,6 +120,19 @@ def process_data_source(source_path_or_url, source_type, output_base_dir, metada
                 "processed_path": segment_info["path"],
                 "segment_index": segment_info["segment_index"],
                 "data_type": "audio_segment_from_video",
+                "timestamp": "2025-06-20T10:00:00Z"
+            })
+    elif source_type == "audio_text_pair":
+        processed_pair_info = process_audio_text_pair(source_path_or_url, output_base_dir, segment_params)
+        if processed_pair_info:
+            # This is a simplified metadata entry.
+            # You might want to create more detailed entries for each audio segment and the text file.
+            processed_outputs_metadata.append({
+                "source_type": source_type,
+                "original_source": original_source_identifier,
+                "processed_audio_paths": [seg["path"] for seg in processed_pair_info["processed_audio"]],
+                "processed_text_path": processed_pair_info["processed_text"],
+                "data_type": "audio_text_aligned",
                 "timestamp": "2025-06-20T10:00:00Z"
             })
     else:
