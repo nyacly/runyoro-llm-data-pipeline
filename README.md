@@ -96,6 +96,16 @@ file, enabling easy alignment for STT model training.
 
 `scripts/test_pipeline.py` remains as a simple example showing how to call `process_data_source` directly if you need more control or want to integrate specific sources (like websites) manually.
 
+#### Running Training Locally vs. Google Colab
+
+Data processing generally runs well on a MacBook Pro, but the first stage of
+LLM training (`scripts/train_llm.py`) can easily exhaust laptop memory.  If you
+see crashes during training, switch to Google Colab or another GPU-enabled
+environment.  This repository now provides Colab notebooks under
+`notebooks/` that automate the heavy training step.  After training finishes you
+can copy the `models/` directory back to your MacBook and continue with local
+testing or further fine‑tuning.
+
 ### 2. LLM Training
 
 Once your data has been processed and is available in `processed_data/processed_text/`, you can proceed with training your LLM.
@@ -184,12 +194,10 @@ For cloud environments, the setup process is similar but often simpler due to pr
     !cp -r "/content/drive/MyDrive/path/to/your/raw_data/*" raw_data/
     ```
     Alternatively, upload directly to the `raw_data/` directory.
-6.  **Run the Pipeline (Processing, Training, Testing)**: Execute the scripts as described in sections 1.4, 2.1, and 3.1:
-    ```python
-    !python3 scripts/test_pipeline.py # For data processing
-    !python3 scripts/train_llm.py --processed_data_path ./processed_data/processed_text --model_name gpt2 --output_dir ./models/runyoro_llm_model
-    !python3 scripts/test_llm.py --model_path ./models/runyoro_llm_model/final_model --prompt "Ekiro kyona"
-    ```
+6.  **Use the Provided Notebooks**: Instead of manually running each command,
+    open the notebooks in the `notebooks/` directory (`01_Process_Data.ipynb`,
+    `02_Train_LLM_Stage1.ipynb`, and `03_Test_LLM.ipynb`).  These notebooks
+    contain the commands needed for processing, training, and testing on Colab.
 
 #### 4.2. Hugging Face Spaces
 
