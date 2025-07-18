@@ -80,8 +80,22 @@ def train_llm(
         data_collator=data_collator,
     )
 
+
+    # --- Automated checkpoint resumption ---
+    latest_checkpoint = None
+    if os.path.isdir(output_dir):
+        checkpoints = [d for d in os.listdir(output_dir) if d.startswith("checkpoint-")]
+        if checkpoints:
+            # Sort by checkpoint number
+            checkpoints = sorted(checkpoints, key=lambda x: int(x.split("-")[-1]))
+            latest_checkpoint = os.path.join(output_dir, checkpoints[-1])
+            logging.info(f"Resuming from latest checkpoint: {latest_checkpoint}")
+
     logging.info("Starting training...")
-    trainer.train()
+    if latest_checkpoint:
+        trainer.train(resume_from_checkpoint=latest_checkpoint)
+    else:
+        trainer.train()
 
     logging.info(f"Saving final model to {output_dir}/final_model")
     trainer.save_model(f"{output_dir}/final_model")

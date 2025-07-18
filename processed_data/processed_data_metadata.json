@@ -61,5 +61,1368 @@
         "processed_text_path": "./processed_data/processed_text/sample2_text_file.txt",
         "data_type": "audio_text_aligned",
         "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___01_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___01_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___02_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___02_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___03_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___03_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___03_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___03_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___04_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___04_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___05_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___05_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___06_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___06_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___06_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___06_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___07_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___07_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___08_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___08_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___09_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___09_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___10_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___10_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___11_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___11_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___12_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___12_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___13_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___13_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___14_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___14_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___14_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___14_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___15_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___15_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___16_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___16_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___16_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___16_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___17_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___17_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___18_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___18_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___19_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___19_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___20_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___20_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___21_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___21_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___22_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___22_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___23_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___23_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___23_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___23_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___24_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___24_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___25_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___25_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___25_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___25_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___26_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___26_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___27_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___27_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___28_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___28_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Ha Kyoto Omu Kairirizi.pdf",
+        "original_source_hash": "f58de13a98f3307991a6f903475f4d31",
+        "processed_path": "./processed_data/processed_text/Ha Kyoto Omu Kairirizi_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Engeso zaitu ez_Obuhangwa.pdf",
+        "original_source_hash": "388e69131aae02b4829e8172cfe01d5c",
+        "processed_path": "./processed_data/processed_text/Engeso zaitu ez_Obuhangwa_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___01_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___01_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___02_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___02_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___03_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___03_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___03_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___03_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___04_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___04_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___05_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___05_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___06_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___06_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___06_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___06_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___07_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___07_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___08_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___08_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___09_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___09_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___10_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___10_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___11_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___11_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___12_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___12_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___13_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___13_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___14_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___14_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___14_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___14_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___15_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___15_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___16_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___16_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___16_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___16_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___17_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___17_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___18_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___18_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___19_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___19_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___20_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___20_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___21_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___21_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___22_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___22_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___23_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___23_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___23_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___23_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___24_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___24_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___25_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___25_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___25_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___25_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___26_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___26_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___27_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___27_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___28_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___28_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Ha munwa Gw_Ekituro.pdf",
+        "original_source_hash": "7f28eedc0b008d48a42e5852e2fa192f",
+        "processed_path": "./processed_data/processed_text/Ha munwa Gw_Ekituro_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Habwaki Biikara Yayosere Okusoma.pdf",
+        "original_source_hash": "bb9bdd77a89ee0f275c5401b02b5e4fa",
+        "processed_path": "./processed_data/processed_text/Habwaki Biikara Yayosere Okusoma_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Nosobora kusoma n_okuhandiika P2 part2.pdf",
+        "original_source_hash": "24980b2c77203f8d273866caa6e5d49a",
+        "processed_path": "./processed_data/processed_text/Nosobora kusoma n_okuhandiika P2 part2_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Obu Ndikura Tindifa.pdf",
+        "original_source_hash": "855d2dfe8cbf7484a7069a2c21d33422",
+        "processed_path": "./processed_data/processed_text/Obu Ndikura Tindifa_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Nosobora kusoma n_okuhandiika.pdf",
+        "original_source_hash": "fab8ed435ef68dc48100febb417d93f1",
+        "processed_path": "./processed_data/processed_text/Nosobora kusoma n_okuhandiika_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/yega_orutooro.pdf",
+        "original_source_hash": "18a91e6c9b968837b53497b315b9e0ae",
+        "processed_path": "./processed_data/processed_text/yega_orutooro_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Kibbaate Kya Kaseegu.pdf",
+        "original_source_hash": "5a1a3069d5c6a629e4859904070d4c48",
+        "processed_path": "./processed_data/processed_text/Kibbaate Kya Kaseegu_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Nosobora kusoma n_okuhandiika_Primary3.pdf",
+        "original_source_hash": "712866e4287acad1ca4b91493078001d",
+        "processed_path": "./processed_data/processed_text/Nosobora kusoma n_okuhandiika_Primary3_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Linda Engeso N_orulimi Rw_ihanga.pdf",
+        "original_source_hash": "53387c920a49d25932e6c38cc37210ac",
+        "processed_path": "./processed_data/processed_text/Linda Engeso N_orulimi Rw_ihanga_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Kalyaki na Marunga.pdf",
+        "original_source_hash": "4988aedebc2a590c69e307e36e0153ad",
+        "processed_path": "./processed_data/processed_text/Kalyaki na Marunga_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Nosobora kusoma n_okuhandiika P2-part1.pdf",
+        "original_source_hash": "5bef0162efdb23069308915fd0fe9e58",
+        "processed_path": "./processed_data/processed_text/Nosobora kusoma n_okuhandiika P2-part1_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Ija Some Ha Manzi.pdf",
+        "original_source_hash": "98ed098e2a560d7ef80ea8619d5e97ef",
+        "processed_path": "./processed_data/processed_text/Ija Some Ha Manzi_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/ebooks_chele_runyoro.pdf",
+        "original_source_hash": "4ea54c81eafbef8c1ca2adeeebfd71ce",
+        "processed_path": "./processed_data/processed_text/ebooks_chele_runyoro_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/36 Okuzaarwa kwa Yesu.pdf",
+        "original_source_hash": "246cfc8c2ccdb835082d4fd20d1c5826",
+        "processed_path": "./processed_data/processed_text/36 Okuzaarwa kwa Yesu_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/RUYORO 1 O.pdf",
+        "original_source_hash": "b139eb64c31f96f55c1330e3f2443a46",
+        "processed_path": "./processed_data/processed_text/RUYORO 1 O_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Runyoro.pdf",
+        "original_source_hash": "270aa7b94e97a4e93af9fcc188a21ff4",
+        "processed_path": "./processed_data/processed_text/Runyoro_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Nyoro-All-Bible.pdf",
+        "original_source_hash": "71b0485b965969cd694b35655cbf4590",
+        "processed_path": "./processed_data/processed_text/Nyoro-All-Bible_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/02 Okutandika kw\u2019okubonabona kw\u2019omuntu.pdf",
+        "original_source_hash": "48a23c946a0e0fbea3955a0c9f44add5",
+        "processed_path": "./processed_data/processed_text/02 Okutandika kw\u2019okubonabona kw\u2019omuntu_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/60 Iguru  Eka ya Ruhanga enungi.pdf",
+        "original_source_hash": "e8365a1ce33e21e92bb9f3ab1a0c40ea",
+        "processed_path": "./processed_data/processed_text/60 Iguru  Eka ya Ruhanga enungi_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___01_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___01_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___01_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___02_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___02_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___02_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___03_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___03_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___03_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___03_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___04_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___04_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___04_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___05_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___05_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___05_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___06_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___06_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___06_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___06_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___07_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___07_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___07_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___08_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___08_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___08_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___09_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___09_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___09_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___10_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___10_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___10_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___11_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___11_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___11_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___12_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___12_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___12_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___13_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___13_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___13_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___14_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___14_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___14_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___14_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___15_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___15_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___15_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___16_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___16_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___16_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___16_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___17_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___17_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___17_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___18_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___18_Matthew_____NYOBSUN2DA_segment_2.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___18_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___19_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___19_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___19_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___20_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___20_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___20_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___21_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___21_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___21_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___22_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_4.wav",
+            "./processed_data/processed_audio/B01___22_Matthew_____NYOBSUN2DA_segment_5.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___22_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___23_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___23_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___23_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___23_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___24_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___24_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___24_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___25_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___25_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___25_Matthew_____NYOBSUN2DA_segment_1.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___25_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___26_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_3.wav",
+            "./processed_data/processed_audio/B01___26_Matthew_____NYOBSUN2DA_segment_4.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___26_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___27_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___27_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___27_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/Matayo",
+        "pair_id": "B01___28_Matthew_____NYOBSUN2DA",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_0.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_1.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_2.wav",
+            "./processed_data/processed_audio/B01___28_Matthew_____NYOBSUN2DA_segment_3.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/B01___28_Matthew_____NYOBSUN2DA_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/03 Noha n\u2019okusandara kw\u2019amaizi.pdf",
+        "original_source_hash": "bfd04fb27cbe2cb38bcabf2044864887",
+        "processed_path": "./processed_data/processed_text/03 Noha n\u2019okusandara kw\u2019amaizi_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/Butandwa eyakabi.pdf",
+        "original_source_hash": "0a3005c2933676a26e190bf8d6af036d",
+        "processed_path": "./processed_data/processed_text/Butandwa eyakabi_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/RUNYORO-RUTOORO-RADIO-SCRIPT (1).pdf",
+        "original_source_hash": "339e11a80528ac2935d90be4fb1937ec",
+        "processed_path": "./processed_data/processed_text/RUNYORO-RUTOORO-RADIO-SCRIPT (1)_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/54 Amahumbuka  Pasika  ag\u2019okubanza.pdf",
+        "original_source_hash": "dd4ae18a3eafc3c113ca329f476780a8",
+        "processed_path": "./processed_data/processed_text/54 Amahumbuka  Pasika  ag\u2019okubanza_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "pdf",
+        "original_source": "./raw_data/01 Ruhanga obu yahangire buli kintu.pdf",
+        "original_source_hash": "a85992fb1cbbf74d3521ca8fc5fa9199",
+        "processed_path": "./processed_data/processed_text/01 Ruhanga obu yahangire buli kintu_pdf.txt",
+        "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
     }
 ]
