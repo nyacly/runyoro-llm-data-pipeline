@@ -36,19 +36,23 @@ def test_llm(
         logging.info(f"Generating text with prompt: \"{prompt}\"")
         input_ids = tokenizer.encode(prompt, return_tensors="pt")
 
+    attention_mask = input_ids.ne(tokenizer.pad_token_id)
+
     if torch.cuda.is_available():
         input_ids = input_ids.to("cuda")
+        attention_mask = attention_mask.to("cuda")
 
     logging.info("Starting text generation...")
     generated_ids = model.generate(
         input_ids,
+        attention_mask=attention_mask,
         max_new_tokens=max_new_tokens,
         num_return_sequences=num_return_sequences,
-        pad_token_id=tokenizer.eos_token_id, # Use eos_token_id as pad_token_id for generation
-        do_sample=True, # Enable sampling for more diverse outputs
-        top_k=50, # Consider top 50 tokens
-        top_p=0.95, # Nucleus sampling
-        temperature=0.7, # Control randomness
+        pad_token_id=tokenizer.pad_token_id,
+        do_sample=True,  # Enable sampling for more diverse outputs
+        top_k=50,  # Consider top 50 tokens
+        top_p=0.95,  # Nucleus sampling
+        temperature=0.7,  # Control randomness
     )
 
     logging.info("Generated text:")
