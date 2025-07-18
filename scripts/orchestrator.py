@@ -7,7 +7,7 @@ import requests
 from scripts.text_processing import process_text_source
 from scripts.audio_processing import process_audio_source
 from scripts.video_processing import process_video_source
-from scripts.audio_text_processing import process_audio_text_pair
+from scripts.audio_text_processing import process_audio_text_pairs
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -123,18 +123,21 @@ def process_data_source(source_path_or_url, source_type, output_base_dir, metada
                 "timestamp": "2025-06-20T10:00:00Z"
             })
     elif source_type == "audio_text_pair":
-        processed_pair_info = process_audio_text_pair(source_path_or_url, output_base_dir, segment_params)
-        if processed_pair_info:
-            # This is a simplified metadata entry.
-            # You might want to create more detailed entries for each audio segment and the text file.
-            processed_outputs_metadata.append({
-                "source_type": source_type,
-                "original_source": original_source_identifier,
-                "processed_audio_paths": [seg["path"] for seg in processed_pair_info["processed_audio"]],
-                "processed_text_path": processed_pair_info["processed_text"],
-                "data_type": "audio_text_aligned",
-                "timestamp": "2025-06-20T10:00:00Z"
-            })
+        processed_pairs = process_audio_text_pairs(
+            source_path_or_url, output_base_dir, segment_params
+        )
+        for pair in processed_pairs:
+            processed_outputs_metadata.append(
+                {
+                    "source_type": source_type,
+                    "original_source": original_source_identifier,
+                    "pair_id": pair["pair_id"],
+                    "processed_audio_paths": [seg["path"] for seg in pair["processed_audio"]],
+                    "processed_text_path": pair["processed_text"],
+                    "data_type": "audio_text_aligned",
+                    "timestamp": "2025-06-20T10:00:00Z",
+                }
+            )
     else:
         logging.error(f"Unknown source type: {source_type}")
 

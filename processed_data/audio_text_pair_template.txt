@@ -1,0 +1,2 @@
+This directory contains examples of processed audio-text pairs. Each audio file has a matching text file with the same base name.
+The metadata file links each pair using the "pair_id" field so STT systems can easily align audio with its transcript.

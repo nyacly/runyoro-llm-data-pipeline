@@ -33,21 +33,33 @@
         "timestamp": "2025-06-20T10:00:00Z"
     },
     {
-        "source_type": "audio_text_pair",
-        "original_source": "./raw_data/audio_text_pair",
-        "processed_audio_paths": [
-            "./processed_data/processed_audio/sample_audio_segment_0.wav"
-        ],
-        "processed_text_path": "./processed_data/processed_text/sample_transcript_text_file.txt",
-        "data_type": "audio_text_aligned",
-        "timestamp": "2025-06-20T10:00:00Z"
-    },
-    {
         "source_type": "image",
         "original_source": "./raw_data/RUNYORO-RUTOORO-RADIO-SCRIPT.png",
         "original_source_hash": "2faee553aae8adc099bee117bdf61637",
         "processed_path": "./processed_data/processed_text/RUNYORO-RUTOORO-RADIO-SCRIPT_image.txt",
         "data_type": "text",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/test_audio_pairs",
+        "pair_id": "sample1",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/sample1_segment_0.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/sample1_text_file.txt",
+        "data_type": "audio_text_aligned",
+        "timestamp": "2025-06-20T10:00:00Z"
+    },
+    {
+        "source_type": "audio_text_pair",
+        "original_source": "./raw_data/test_audio_pairs",
+        "pair_id": "sample2",
+        "processed_audio_paths": [
+            "./processed_data/processed_audio/sample2_segment_0.wav"
+        ],
+        "processed_text_path": "./processed_data/processed_text/sample2_text_file.txt",
+        "data_type": "audio_text_aligned",
         "timestamp": "2025-06-20T10:00:00Z"
     }
 ]
