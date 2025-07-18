@@ -66,10 +66,10 @@ def train_llm(
         logging_steps=logging_steps,
         learning_rate=learning_rate,
         weight_decay=weight_decay,
-        evaluation_strategy="steps",
+        eval_strategy="steps",  # Changed from evaluation_strategy
         eval_steps=eval_steps,
         gradient_accumulation_steps=gradient_accumulation_steps,
-        fp16=True, # Enable mixed precision training for faster training on modern GPUs
+        fp16=False, # Disable mixed precision for Apple Silicon/Mac
     )
 
     trainer = Trainer(
