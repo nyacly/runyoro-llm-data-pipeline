@@ -1,4 +1,3 @@
-
 import os
 import PyPDF2
 from PIL import Image
@@ -29,11 +28,18 @@ def extract_text_from_pdf(pdf_path):
         logging.error(f"Error reading native PDF {pdf_path}: {e}")
         return None
 
-def extract_text_from_image_ocr(image_path):
+def extract_text_from_image_ocr(image_or_path):
+    """
+    Accepts either a file path (str) or a PIL Image object and performs OCR.
+    """
     try:
-        return pytesseract.image_to_string(Image.open(image_path), lang="eng") # Adjust lang as needed
+        if isinstance(image_or_path, str):
+            image = Image.open(image_or_path)
+        else:
+            image = image_or_path
+        return pytesseract.image_to_string(image, lang="eng")  # Adjust lang as needed
     except Exception as e:
-        logging.error(f"Error processing image {image_path} with OCR: {e}")
+        logging.error(f"Error processing image {image_or_path} with OCR: {e}")
         return ""
 
 def scrape_static_website(url):
