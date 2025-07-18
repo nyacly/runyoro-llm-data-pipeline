@@ -13,13 +13,27 @@ from scripts.core_components import (
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def clean_and_preprocess_text(text):
+    """Clean and normalize extracted text while keeping Unicode letters.
+
+    The function removes unwanted symbols but preserves non-ASCII
+    characters. Whitespace is normalised without discarding newlines.
+    """
+
     if not isinstance(text, str):
         return ""
-    text = text.replace('&amp;', '&').replace('&lt;', '<').replace('&gt;', '>')
-    # Adjust regex for Runyoro/Rutooro specific characters if needed
-    text = re.sub(r'[^a-zA-Z0-9.,?!\s]', '', text)
-    text = re.sub(r'\s+', ' ', text).strip()
-    return text
+
+    text = text.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
+
+    # Remove characters that are not word characters, whitespace or common
+    # punctuation while supporting Unicode letters.
+    text = re.sub(r'[^\w\s.,?!-]', '', text, flags=re.UNICODE)
+
+    # Normalise spaces and tabs but keep newlines to maintain sentence breaks
+    text = re.sub(r'[ \t]+', ' ', text)
+    # Collapse multiple line breaks into a single one
+    text = re.sub(r'\n{2,}', '\n', text)
+
+    return text.strip()
 
 def process_text_source(source_path_or_url, source_type, output_dir):
     raw_text = ""
