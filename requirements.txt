@@ -1,19 +1,5 @@
-PyPDF2
-Pillow
-pytesseract
-requests
-beautifulsoup4
-selenium
-webdriver-manager
-pydub
-ffmpeg-python
-soundfile
+numpy<2.0
+pdf2image
 datasets
 transformers
-flax
-# torch and tensorflow are not available for Python 3.13 as of July 2025
-# If you downgrade to Python 3.10/3.11, add:
-# torch
-tensorflow
-
-
+torch
