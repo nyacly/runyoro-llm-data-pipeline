@@ -28,9 +28,14 @@ def train_llm(
     weight_decay: float = 0.01,
     eval_steps: int = 500,
     gradient_accumulation_steps: int = 1,
+    cache_dir: str | None = None,
 ):
     logging.info(f"Loading dataset from {processed_data_path}")
-    dataset = load_dataset("text", data_files=f"{processed_data_path}/*.txt")
+    dataset = load_dataset(
+        "text",
+        data_files=f"{processed_data_path}/*.txt",
+        cache_dir=cache_dir,
+    )
 
     logging.info("Training/Updating tokenizer...")
     tokenizer = train_tokenizer(processed_data_path, tokenizer_dir, model_name, vocab_size)
@@ -163,6 +168,12 @@ if __name__ == "__main__":
         default=1,
         help="Number of updates steps to accumulate before performing a backward/update pass.",
     )
+    parser.add_argument(
+        "--cache_dir",
+        type=str,
+        default=None,
+        help="Optional directory for Hugging Face dataset cache.",
+    )
 
     args = parser.parse_args()
     train_llm(
@@ -175,6 +186,7 @@ if __name__ == "__main__":
         per_device_train_batch_size=args.per_device_train_batch_size,
         learning_rate=args.learning_rate,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
+        cache_dir=args.cache_dir,
     )
 
 
