@@ -62,6 +62,7 @@ python3 scripts/process_raw_data.py
 ```
 
 This script detects the file type (PDF, image, audio, video, or text) and calls the orchestrator accordingly. Processed outputs are saved in `processed_data/`, and metadata is written to `processed_data/processed_data_metadata.json`.
+After processing completes, a tokenizer is trained or updated using the text in `processed_data/processed_text/` and saved to `./tokenizer`. This tokenizer will be reused during LLM and ASR training.
 
 #### Example: Processing an Audio/Text Pair Directory
 
@@ -118,7 +119,8 @@ The `scripts/train_llm.py` script is used to train the LLM. You can specify vari
 python3 scripts/train_llm.py \
     --processed_data_path ./processed_data/processed_text \
     --model_name gpt2 \
-    --output_dir ./models/runyoro_llm_model
+    --output_dir ./models/runyoro_llm_model \
+    --tokenizer_dir ./tokenizer
 ```
 
 **Key Parameters:**
@@ -126,6 +128,8 @@ python3 scripts/train_llm.py \
 *   `--processed_data_path`: Path to the directory containing your processed `.txt` files (e.g., `./processed_data/processed_text`). Each `.txt` file will be treated as a document for training.
 *   `--model_name`: The name of a pre-trained model from Hugging Face Transformers to use as a base. For initial experimentation, `gpt2` is a good starting point. For low-resource languages, you might consider smaller models or multilingual models that can be further fine-tuned.
 *   `--output_dir`: The directory where the trained model and tokenizer will be saved.
+*   `--tokenizer_dir`: Directory where the tokenizer will be stored. If it does not exist, it will be created and trained from the processed text.
+*   `--vocab_size`: Vocabulary size to use when training the tokenizer.
 
 **Expected Results during Training:**
 

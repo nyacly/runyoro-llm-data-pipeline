@@ -9,6 +9,7 @@ from transformers import (
     Trainer,
     DataCollatorForLanguageModeling,
 )
+from scripts.tokenizer_utils import train_tokenizer
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -16,6 +17,8 @@ def train_llm(
     processed_data_path: str,
     model_name: str,
     output_dir: str,
+    tokenizer_dir: str,
+    vocab_size: int = 5000,
     num_train_epochs: int = 3,
     per_device_train_batch_size: int = 4,
     save_steps: int = 500,
@@ -27,12 +30,10 @@ def train_llm(
     gradient_accumulation_steps: int = 1,
 ):
     logging.info(f"Loading dataset from {processed_data_path}")
-    # Assuming processed_data_path points to a directory containing text files
-    # Each text file is considered a document
     dataset = load_dataset("text", data_files=f"{processed_data_path}/*.txt")
 
-    logging.info(f"Loading tokenizer: {model_name}")
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    logging.info("Training/Updating tokenizer...")
+    tokenizer = train_tokenizer(processed_data_path, tokenizer_dir, model_name, vocab_size)
     if tokenizer.pad_token is None:
         tokenizer.add_special_tokens({"pad_token": "[PAD]"})
 
@@ -127,6 +128,18 @@ if __name__ == "__main__":
         help="Directory to save the trained model and tokenizer.",
     )
     parser.add_argument(
+        "--tokenizer_dir",
+        type=str,
+        default="./tokenizer",
+        help="Directory where the tokenizer will be saved.",
+    )
+    parser.add_argument(
+        "--vocab_size",
+        type=int,
+        default=5000,
+        help="Vocabulary size for tokenizer training.",
+    )
+    parser.add_argument(
         "--num_train_epochs",
         type=int,
         default=3,
@@ -156,6 +169,8 @@ if __name__ == "__main__":
         processed_data_path=args.processed_data_path,
         model_name=args.model_name,
         output_dir=args.output_dir,
+        tokenizer_dir=args.tokenizer_dir,
+        vocab_size=args.vocab_size,
         num_train_epochs=args.num_train_epochs,
         per_device_train_batch_size=args.per_device_train_batch_size,
         learning_rate=args.learning_rate,
