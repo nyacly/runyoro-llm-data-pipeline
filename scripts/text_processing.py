@@ -16,7 +16,8 @@ def clean_and_preprocess_text(text):
     """Clean and normalize extracted text while keeping Unicode letters.
 
     The function removes unwanted symbols but preserves non-ASCII
-    characters. Whitespace is normalised without discarding newlines.
+    characters. Whitespace and line breaks are largely kept to
+    maintain the formatting of the original document.
     """
 
     if not isinstance(text, str):
@@ -25,13 +26,16 @@ def clean_and_preprocess_text(text):
     text = text.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">")
 
     # Remove characters that are not word characters, whitespace or common
-    # punctuation while supporting Unicode letters.
-    text = re.sub(r'[^\w\s.,?!-]', '', text, flags=re.UNICODE)
+    # punctuation while supporting Unicode letters. Keep apostrophes and
+    # hyphen‑like characters since they are meaningful in many languages.
+    allowed_punct = ".,?!'’-–—"
+    pattern = rf"[^\w\s{re.escape(allowed_punct)}]"
+    text = re.sub(pattern, '', text, flags=re.UNICODE)
 
-    # Normalise spaces and tabs but keep newlines to maintain sentence breaks
-    text = re.sub(r'[ \t]+', ' ', text)
-    # Collapse multiple line breaks into a single one
-    text = re.sub(r'\n{2,}', '\n', text)
+    # Replace tabs with spaces but otherwise keep spacing and line breaks
+    # intact so the output stays close to the source formatting
+    text = text.replace('\t', ' ')
+    text = text.replace('\r\n', '\n').replace('\r', '\n')
 
     return text.strip()
 
