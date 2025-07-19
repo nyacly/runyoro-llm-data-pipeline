@@ -77,9 +77,9 @@ def train_llm(
     )
 
     # Split dataset into train and validation
-    train_dataset = tokenized_datasets["train"].train_test_split(test_size=0.1)
-    eval_dataset = train_dataset["test"]
-    train_dataset = train_dataset["train"]
+    split_tokenized_datasets = tokenized_datasets.train_test_split(test_size=0.1)
+    train_dataset = split_tokenized_datasets["train"]
+    eval_dataset = split_tokenized_datasets["test"]
 
     logging.info(f"Loading model: {model_name}")
     model = AutoModelForCausalLM.from_pretrained(model_name)
