@@ -1,17 +1,27 @@
 import argparse
 import logging
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import torch
 import os
+
+import pytest
+
+try:
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+except ModuleNotFoundError:  # pragma: no cover - handled via skip
+    pytest.skip("transformers library not installed", allow_module_level=True)
+
+import torch
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def test_llm(
-    model_path: str,
+    model_path: str = "./models/runyoro_llm_model/final_model",
     prompt: str = "",
     max_new_tokens: int = 50,
     num_return_sequences: int = 1,
 ):
+    if not os.path.isdir(model_path):
+        pytest.skip(f"Model path {model_path} not available")
+
     logging.info(f"Loading model and tokenizer from {model_path}")
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_path)
