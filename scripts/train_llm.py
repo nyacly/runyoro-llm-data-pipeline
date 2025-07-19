@@ -1,7 +1,7 @@
 import os
 import argparse
 import logging
-from datasets import load_dataset
+from datasets import Dataset
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
@@ -31,11 +31,37 @@ def train_llm(
     cache_dir: str | None = None,
 ):
     logging.info(f"Loading dataset from {processed_data_path}")
-    dataset = load_dataset(
-        "text",
-        data_files=f"{processed_data_path}/*.txt",
-        cache_dir=cache_dir,
-    )
+
+    processed_data_full_path = os.path.join(os.getcwd(), processed_data_path)
+    logging.info(f"Attempting to load text files from: {processed_data_full_path}")
+
+    if not os.path.isdir(processed_data_full_path):
+        raise FileNotFoundError(
+            f"Processed data directory not found: {processed_data_full_path}"
+        )
+
+    all_texts = []
+    text_files_found = 0
+    for filename in os.listdir(processed_data_full_path):
+        if filename.endswith(".txt"):
+            filepath = os.path.join(processed_data_full_path, filename)
+            try:
+                with open(filepath, "r", encoding="utf-8") as f:
+                    lines = [line.strip() for line in f if line.strip()]
+                    all_texts.extend(lines)
+                text_files_found += 1
+            except Exception as e:
+                print(f"Error reading file {filepath}: {e}")
+
+    if text_files_found == 0:
+        raise ValueError(
+            f"No .txt files found in the specified processed data directory: {processed_data_full_path}"
+        )
+    else:
+        logging.info(f"Successfully loaded text from {text_files_found} files.")
+
+    dataset = Dataset.from_dict({"text": all_texts})
+    logging.info(f"Dataset created with {len(dataset)} examples.")
 
     logging.info("Training/Updating tokenizer...")
     tokenizer = train_tokenizer(processed_data_path, tokenizer_dir, model_name, vocab_size)
