@@ -33,7 +33,24 @@ def train_llm(
     checkpoint_dir: str | None = None,
     cleanup_checkpoints: bool = False,
     mixed_precision: str | None = None,
+    use_wandb: bool = False,
 ):
+    """Train or resume a causal language model.
+
+    Increasing ``num_train_epochs`` allows longer training runs. Pass
+    ``--num_train_epochs 5`` (or higher) on the command line to train for
+    additional epochs. When ``use_wandb`` is enabled, training and evaluation
+    losses are logged to Weights & Biases. Monitor ``eval_loss`` there and stop
+    training if it begins to rise while ``train_loss`` continues to fall, which
+    can indicate overfitting.
+
+    To incorporate additional Runyoro/Rutooro data, simply place new ``.txt``
+    files in ``processed_data_path`` before running this script again – the
+    loader automatically reads all files in that directory.
+
+    Experiment with ``learning_rate`` and ``gradient_accumulation_steps`` if the
+    model is still not converging well after more epochs or data.
+    """
     logging.info(f"Loading dataset from {processed_data_path}")
 
     processed_data_full_path = os.path.join(os.getcwd(), processed_data_path)
@@ -116,6 +133,7 @@ def train_llm(
         gradient_accumulation_steps=gradient_accumulation_steps,
         fp16=fp16,
         bf16=bf16,
+        report_to=["wandb"] if use_wandb else None,
     )
 
     trainer = Trainer(
@@ -274,6 +292,11 @@ if __name__ == "__main__":
             " runs in full precision."
         ),
     )
+    parser.add_argument(
+        "--use_wandb",
+        action="store_true",
+        help="Log metrics to Weights & Biases during training.",
+    )
 
     args = parser.parse_args()
     train_llm(
@@ -291,6 +314,7 @@ if __name__ == "__main__":
         save_total_limit=args.save_total_limit,
         cleanup_checkpoints=args.cleanup_checkpoints,
         mixed_precision=args.mixed_precision,
+        use_wandb=args.use_wandb,
     )
 
 

@@ -123,7 +123,16 @@ python3 scripts/train_llm.py \
     --tokenizer_dir ./tokenizer
     --checkpoint_dir /content/runyoro_checkpoints
     --mixed_precision fp16
+    --num_train_epochs 5 \
+    --use_wandb
 ```
+
+Increasing `--num_train_epochs` lets the model train longer. When `--use_wandb`
+is supplied, training and evaluation losses are logged to your Weights & Biases
+dashboard. Watch the `eval_loss` curve—if it starts to rise while the training
+loss keeps dropping, stop the run to avoid overfitting. You can further
+experiment with `--learning_rate` or `--gradient_accumulation_steps` if the
+model isn't converging well.
 
 **Key Parameters:**
 
@@ -157,14 +166,23 @@ The `scripts/test_llm.py` script allows you to test your trained LLM by generati
 python3 scripts/test_llm.py \
     --model_path ./models/runyoro_llm_model/final_model \
     --prompt "Ekiro kyona" \
-    --max_new_tokens 100
+    --max_new_tokens 100 \
+    --temperature 0.8 \
+    --top_k 50 \
+    --top_p 0.95 \
+    --no_repeat_ngram_size 3
 ```
 
 **Key Parameters:**
 
 *   `--model_path`: Path to the directory containing your trained model and tokenizer (the `final_model` directory from training).
 *   `--prompt`: An optional initial text prompt in Runyoro/Rutooro for the model to continue. If no prompt is provided, the model will generate text from scratch.
-*   `--max_new_tokens`: The maximum number of new tokens (words/subwords) the model should generate.
+*   `--max_new_tokens`: Maximum number of tokens to generate.
+*   `--temperature`: Controls randomness; values around 0.7-0.9 generally work well.
+*   `--top_k`: Sample from the `k` most probable tokens.
+*   `--top_p`: Nucleus sampling threshold.
+*   `--no_repeat_ngram_size`: Prevent repetition of ngrams of this length.
+*   `--num_beams`: Use beam search instead of sampling when set (e.g. `5`) for more coherent text.
 
 **Expected Results from Testing:**
 
