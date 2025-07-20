@@ -122,6 +122,7 @@ python3 scripts/train_llm.py \
     --output_dir ./models/runyoro_llm_model \
     --tokenizer_dir ./tokenizer
     --checkpoint_dir /content/runyoro_checkpoints
+    --mixed_precision fp16
 ```
 
 **Key Parameters:**
@@ -134,6 +135,7 @@ python3 scripts/train_llm.py \
 *   `--checkpoint_dir`: Optional directory for intermediate checkpoints. Using a location outside Google Drive prevents the trash from filling up during training.
 *   `--save_total_limit`: Number of checkpoints to keep (older ones are deleted).
 *   `--cleanup_checkpoints`: If set, the `checkpoint_dir` will be removed after the final model is copied to `output_dir`.
+*   `--mixed_precision`: Set to `fp16` or `bf16` to enable faster mixed‑precision training on GPU (recommended on Colab Pro+).
 
 **Expected Results during Training:**
 
@@ -173,6 +175,19 @@ The script will output the generated text sequences. The quality of the generate
 *   **Model size and architecture**: Larger models generally capture more complex language patterns.
 
 Initially, with a small dataset and a base model like GPT-2, the generated text might not be perfectly coherent or grammatically correct in Runyoro/Rutooro. However, you should observe that the model starts to generate sequences that resemble the Runyoro/Rutooro language in terms of character patterns and some common words, indicating that it has learned from your data.
+
+### 3.2. Audio/Video Transcription
+
+Once an initial model is available you can automatically transcribe recordings to grow the dataset. The helper script `scripts/transcribe_audio_whisper.py` relies on the Faster‑Whisper implementation and works well on Colab GPUs.
+
+```bash
+python3 scripts/transcribe_audio_whisper.py \
+    --input_path path/to/audio_or_video.wav \
+    --output_path ./transcripts/output.txt \
+    --model_size base
+```
+
+Add the generated transcripts back into `raw_data/` or `processed_data/processed_text/` before the next training stage.
 
 ### 4. Cloud Setup (Google Colab / Hugging Face Spaces)
 
@@ -275,6 +290,7 @@ Refer to the individual Python files in the `scripts/` directory for detailed in
 *   `scripts/test_pipeline.py`: An example script to demonstrate the data processing pipeline's functionality.
 *   `scripts/train_llm.py`: The main script for training the LLM.
 *   `scripts/test_llm.py`: Script for testing the trained LLM by generating text.
+*   `scripts/transcribe_audio_whisper.py`: Utility script using Faster-Whisper to generate transcripts from audio or video files.
 
 ## Contributing
 

@@ -32,6 +32,7 @@ def train_llm(
     cache_dir: str | None = None,
     checkpoint_dir: str | None = None,
     cleanup_checkpoints: bool = False,
+    mixed_precision: str | None = None,
 ):
     logging.info(f"Loading dataset from {processed_data_path}")
 
@@ -93,6 +94,13 @@ def train_llm(
 
     training_output_dir = checkpoint_dir if checkpoint_dir else output_dir
 
+    fp16 = False
+    bf16 = False
+    if mixed_precision == "fp16":
+        fp16 = True
+    elif mixed_precision == "bf16":
+        bf16 = True
+
     training_args = TrainingArguments(
         output_dir=training_output_dir,
         overwrite_output_dir=True,
@@ -106,7 +114,8 @@ def train_llm(
         eval_strategy="steps",  # Changed from evaluation_strategy
         eval_steps=eval_steps,
         gradient_accumulation_steps=gradient_accumulation_steps,
-        fp16=False,  # Disable mixed precision for Apple Silicon/Mac
+        fp16=fp16,
+        bf16=bf16,
     )
 
     trainer = Trainer(
@@ -235,6 +244,16 @@ if __name__ == "__main__":
         action="store_true",
         help="Remove checkpoint_dir after copying the final model to output_dir.",
     )
+    parser.add_argument(
+        "--mixed_precision",
+        type=str,
+        choices=["fp16", "bf16"],
+        default=None,
+        help=(
+            "Enable mixed precision training (fp16 or bf16). If not set, training"
+            " runs in full precision."
+        ),
+    )
 
     args = parser.parse_args()
     train_llm(
@@ -251,6 +270,7 @@ if __name__ == "__main__":
         checkpoint_dir=args.checkpoint_dir,
         save_total_limit=args.save_total_limit,
         cleanup_checkpoints=args.cleanup_checkpoints,
+        mixed_precision=args.mixed_precision,
     )
 
 
