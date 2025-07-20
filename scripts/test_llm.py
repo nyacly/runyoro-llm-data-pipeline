@@ -1,6 +1,6 @@
 import argparse
 import logging
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
 import torch
 import os
 
@@ -9,19 +9,21 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 def test_llm(
     model_path: str,
     prompt: str = "",
-    max_new_tokens: int = 50,
-    num_return_sequences: int = 1,
+    max_new_tokens: int = 100,
+    num_return_sequences: int = 3,
     temperature: float = 0.7,
+    repetition_penalty: float = 2.0,
     top_k: int = 50,
     top_p: float = 0.95,
-    no_repeat_ngram_size: int | None = None,
+    no_repeat_ngram_size: int | None = 2,
     num_beams: int | None = None,
 ):
     """Generate text using a trained model with flexible decoding parameters.
 
     ``temperature`` and ``top_k``/``top_p`` control the randomness of sampling.
     Higher temperature or larger ``top_k`` can produce more creative text. Set
-    ``no_repeat_ngram_size`` (e.g. 2 or 3) to reduce immediate repetition.
+    ``no_repeat_ngram_size`` (e.g. 2 or 3) to reduce immediate repetition, and
+    ``repetition_penalty`` to further discourage loops.
     If ``num_beams`` is provided, beam search is used instead of sampling,
     which can improve coherence at the cost of diversity.
     """
@@ -57,25 +59,27 @@ def test_llm(
         attention_mask = attention_mask.to("cuda")
 
     logging.info("Starting text generation...")
-    gen_args = dict(
-        input_ids=input_ids,
-        attention_mask=attention_mask,
+    gen_config = GenerationConfig(
         max_new_tokens=max_new_tokens,
-        num_return_sequences=num_return_sequences,
-        pad_token_id=tokenizer.pad_token_id,
         temperature=temperature,
+        repetition_penalty=repetition_penalty,
+        no_repeat_ngram_size=no_repeat_ngram_size,
         top_k=top_k,
         top_p=top_p,
+        num_return_sequences=num_return_sequences,
     )
-    if no_repeat_ngram_size:
-        gen_args["no_repeat_ngram_size"] = no_repeat_ngram_size
     if num_beams:
-        gen_args["num_beams"] = num_beams
-        gen_args["do_sample"] = False
+        gen_config.num_beams = num_beams
+        gen_config.do_sample = False
     else:
-        gen_args["do_sample"] = True
+        gen_config.do_sample = True
 
-    generated_ids = model.generate(**gen_args)
+    generated_ids = model.generate(
+        input_ids=input_ids,
+        attention_mask=attention_mask,
+        pad_token_id=tokenizer.pad_token_id,
+        generation_config=gen_config,
+    )
 
     logging.info("Generated text:")
     for i, generated_id in enumerate(generated_ids):
@@ -102,13 +106,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--max_new_tokens",
         type=int,
-        default=50,
+        default=100,
         help="Maximum number of new tokens to generate.",
     )
     parser.add_argument(
         "--num_return_sequences",
         type=int,
-        default=1,
+        default=3,
         help="Number of sequences to generate.",
     )
     parser.add_argument(
@@ -132,8 +136,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--no_repeat_ngram_size",
         type=int,
-        default=None,
+        default=2,
         help="Prevent repetition of ngrams of this size.",
+    )
+    parser.add_argument(
+        "--repetition_penalty",
+        type=float,
+        default=2.0,
+        help="Penalty for repetition during generation.",
     )
     parser.add_argument(
         "--num_beams",
@@ -151,6 +161,7 @@ if __name__ == "__main__":
         temperature=args.temperature,
         top_k=args.top_k,
         top_p=args.top_p,
+        repetition_penalty=args.repetition_penalty,
         no_repeat_ngram_size=args.no_repeat_ngram_size,
         num_beams=args.num_beams,
     )
