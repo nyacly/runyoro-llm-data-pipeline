@@ -2,7 +2,7 @@ import os
 import argparse
 import logging
 import shutil
-from datasets import Dataset
+from datasets import Dataset, load_dataset
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
@@ -20,19 +20,20 @@ def train_llm(
     output_dir: str,
     tokenizer_dir: str,
     vocab_size: int = 5000,
-    num_train_epochs: int = 3,
-    per_device_train_batch_size: int = 4,
-    save_steps: int = 500,
+    num_train_epochs: int = 5,
+    per_device_train_batch_size: int = 8,
+    save_steps: int = 5000,
     save_total_limit: int = 2,
-    logging_steps: int = 50,
-    learning_rate: float = 2e-5,
+    logging_steps: int = 10,
+    learning_rate: float = 1e-5,
+    warmup_steps: int = 500,
     weight_decay: float = 0.01,
     eval_steps: int = 500,
     gradient_accumulation_steps: int = 1,
     cache_dir: str | None = None,
     checkpoint_dir: str | None = None,
     cleanup_checkpoints: bool = False,
-    mixed_precision: str | None = None,
+    mixed_precision: str | None = "fp16",
     use_wandb: bool = False,
 ):
     """Train or resume a causal language model.
@@ -50,39 +51,28 @@ def train_llm(
 
     Experiment with ``learning_rate`` and ``gradient_accumulation_steps`` if the
     model is still not converging well after more epochs or data.
+    Mixed precision (``fp16``) is enabled by default for faster training on GPUs.
     """
     logging.info(f"Loading dataset from {processed_data_path}")
 
     processed_data_full_path = os.path.join(os.getcwd(), processed_data_path)
-    logging.info(f"Attempting to load text files from: {processed_data_full_path}")
+    logging.info(
+        f"Attempting to load text files from: {processed_data_full_path}/*.txt"
+    )
 
     if not os.path.isdir(processed_data_full_path):
         raise FileNotFoundError(
             f"Processed data directory not found: {processed_data_full_path}"
         )
 
-    all_texts = []
-    text_files_found = 0
-    for filename in os.listdir(processed_data_full_path):
-        if filename.endswith(".txt"):
-            filepath = os.path.join(processed_data_full_path, filename)
-            try:
-                with open(filepath, "r", encoding="utf-8") as f:
-                    lines = [line.strip() for line in f if line.strip()]
-                    all_texts.extend(lines)
-                text_files_found += 1
-            except Exception as e:
-                print(f"Error reading file {filepath}: {e}")
+    dataset = load_dataset(
+        "text",
+        data_files=f"{processed_data_full_path}/*.txt",
+    )["train"]
+    logging.info(f"Dataset size: {len(dataset)} examples")
 
-    if text_files_found == 0:
-        raise ValueError(
-            f"No .txt files found in the specified processed data directory: {processed_data_full_path}"
-        )
-    else:
-        logging.info(f"Successfully loaded text from {text_files_found} files.")
-
-    dataset = Dataset.from_dict({"text": all_texts})
-    logging.info(f"Dataset created with {len(dataset)} examples.")
+    # Ensure we have a validation split
+    dataset = dataset.train_test_split(test_size=0.1)
 
     logging.info("Training/Updating tokenizer...")
     tokenizer = train_tokenizer(processed_data_path, tokenizer_dir, model_name, vocab_size)
@@ -97,13 +87,14 @@ def train_llm(
         tokenize_function, batched=True, num_proc=os.cpu_count(), remove_columns=["text"]
     )
 
-    # Split dataset into train and validation
-    split_tokenized_datasets = tokenized_datasets.train_test_split(test_size=0.1)
-    train_dataset = split_tokenized_datasets["train"]
-    eval_dataset = split_tokenized_datasets["test"]
+    # Datasets were already split earlier
+    train_dataset = tokenized_datasets["train"]
+    eval_dataset = tokenized_datasets["test"]
 
     logging.info(f"Loading model: {model_name}")
-    model = AutoModelForCausalLM.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(
+        model_name, ignore_mismatched_sizes=True
+    )
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
         model.resize_token_embeddings(len(tokenizer))
 
@@ -127,12 +118,14 @@ def train_llm(
         save_total_limit=save_total_limit,
         logging_steps=logging_steps,
         learning_rate=learning_rate,
+        warmup_steps=warmup_steps,
         weight_decay=weight_decay,
-        eval_strategy="steps",  # Changed from evaluation_strategy
+        evaluation_strategy="steps",
         eval_steps=eval_steps,
         gradient_accumulation_steps=gradient_accumulation_steps,
         fp16=fp16,
         bf16=bf16,
+        run_name="runyoro_llm_v2",
         report_to=["wandb"] if use_wandb else None,
     )
 
@@ -244,13 +237,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num_train_epochs",
         type=int,
-        default=3,
+        default=5,
         help="Number of training epochs.",
     )
     parser.add_argument(
         "--per_device_train_batch_size",
         type=int,
-        default=4,
+        default=8,
         help="Batch size per device during training.",
     )
     parser.add_argument(
@@ -262,8 +255,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--learning_rate",
         type=float,
-        default=2e-5,
+        default=1e-5,
         help="Learning rate for training.",
+    )
+    parser.add_argument(
+        "--warmup_steps",
+        type=int,
+        default=500,
+        help="Warmup steps for the scheduler.",
     )
     parser.add_argument(
         "--gradient_accumulation_steps",
@@ -286,7 +285,7 @@ if __name__ == "__main__":
         "--mixed_precision",
         type=str,
         choices=["fp16", "bf16"],
-        default=None,
+        default="fp16",
         help=(
             "Enable mixed precision training (fp16 or bf16). If not set, training"
             " runs in full precision."
@@ -308,6 +307,7 @@ if __name__ == "__main__":
         num_train_epochs=args.num_train_epochs,
         per_device_train_batch_size=args.per_device_train_batch_size,
         learning_rate=args.learning_rate,
+        warmup_steps=args.warmup_steps,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         cache_dir=args.cache_dir,
         checkpoint_dir=args.checkpoint_dir,
