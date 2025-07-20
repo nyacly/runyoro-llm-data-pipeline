@@ -11,7 +11,21 @@ def test_llm(
     prompt: str = "",
     max_new_tokens: int = 50,
     num_return_sequences: int = 1,
+    temperature: float = 0.7,
+    top_k: int = 50,
+    top_p: float = 0.95,
+    no_repeat_ngram_size: int | None = None,
+    num_beams: int | None = None,
 ):
+    """Generate text using a trained model with flexible decoding parameters.
+
+    ``temperature`` and ``top_k``/``top_p`` control the randomness of sampling.
+    Higher temperature or larger ``top_k`` can produce more creative text. Set
+    ``no_repeat_ngram_size`` (e.g. 2 or 3) to reduce immediate repetition.
+    If ``num_beams`` is provided, beam search is used instead of sampling,
+    which can improve coherence at the cost of diversity.
+    """
+
     logging.info(f"Loading model and tokenizer from {model_path}")
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_path)
@@ -43,17 +57,25 @@ def test_llm(
         attention_mask = attention_mask.to("cuda")
 
     logging.info("Starting text generation...")
-    generated_ids = model.generate(
-        input_ids,
+    gen_args = dict(
+        input_ids=input_ids,
         attention_mask=attention_mask,
         max_new_tokens=max_new_tokens,
         num_return_sequences=num_return_sequences,
         pad_token_id=tokenizer.pad_token_id,
-        do_sample=True,  # Enable sampling for more diverse outputs
-        top_k=50,  # Consider top 50 tokens
-        top_p=0.95,  # Nucleus sampling
-        temperature=0.7,  # Control randomness
+        temperature=temperature,
+        top_k=top_k,
+        top_p=top_p,
     )
+    if no_repeat_ngram_size:
+        gen_args["no_repeat_ngram_size"] = no_repeat_ngram_size
+    if num_beams:
+        gen_args["num_beams"] = num_beams
+        gen_args["do_sample"] = False
+    else:
+        gen_args["do_sample"] = True
+
+    generated_ids = model.generate(**gen_args)
 
     logging.info("Generated text:")
     for i, generated_id in enumerate(generated_ids):
@@ -89,6 +111,36 @@ if __name__ == "__main__":
         default=1,
         help="Number of sequences to generate.",
     )
+    parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.7,
+        help="Sampling temperature (higher values = more randomness).",
+    )
+    parser.add_argument(
+        "--top_k",
+        type=int,
+        default=50,
+        help="Sample from the top k tokens.",
+    )
+    parser.add_argument(
+        "--top_p",
+        type=float,
+        default=0.95,
+        help="Nucleus sampling probability threshold.",
+    )
+    parser.add_argument(
+        "--no_repeat_ngram_size",
+        type=int,
+        default=None,
+        help="Prevent repetition of ngrams of this size.",
+    )
+    parser.add_argument(
+        "--num_beams",
+        type=int,
+        default=None,
+        help="Use beam search with this many beams (disables sampling).",
+    )
 
     args = parser.parse_args()
     test_llm(
@@ -96,6 +148,11 @@ if __name__ == "__main__":
         prompt=args.prompt,
         max_new_tokens=args.max_new_tokens,
         num_return_sequences=args.num_return_sequences,
+        temperature=args.temperature,
+        top_k=args.top_k,
+        top_p=args.top_p,
+        no_repeat_ngram_size=args.no_repeat_ngram_size,
+        num_beams=args.num_beams,
     )
 
 
