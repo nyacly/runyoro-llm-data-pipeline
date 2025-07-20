@@ -15,6 +15,9 @@ beautifulsoup4
 selenium==4.34.2
 webdriver-manager==4.0.2
 
+# Audio transcription
+faster-whisper
+
 # System level utilities required for OCR, PDF and media processing
 # The following are system-level packages typically installed via apt or brew
 # They are listed here for completeness but will not be installed by pip
