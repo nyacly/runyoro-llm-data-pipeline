@@ -121,6 +121,7 @@ python3 scripts/train_llm.py \
     --model_name gpt2 \
     --output_dir ./models/runyoro_llm_model \
     --tokenizer_dir ./tokenizer
+    --checkpoint_dir /content/runyoro_checkpoints
 ```
 
 **Key Parameters:**
@@ -130,6 +131,9 @@ python3 scripts/train_llm.py \
 *   `--output_dir`: The directory where the trained model and tokenizer will be saved.
 *   `--tokenizer_dir`: Directory where the tokenizer will be stored. If it does not exist, it will be created and trained from the processed text.
 *   `--vocab_size`: Vocabulary size to use when training the tokenizer.
+*   `--checkpoint_dir`: Optional directory for intermediate checkpoints. Using a location outside Google Drive prevents the trash from filling up during training.
+*   `--save_total_limit`: Number of checkpoints to keep (older ones are deleted).
+*   `--cleanup_checkpoints`: If set, the `checkpoint_dir` will be removed after the final model is copied to `output_dir`.
 
 **Expected Results during Training:**
 
@@ -137,7 +141,7 @@ During training, you will see logs indicating the progress, including:
 
 *   **Loss values**: These should generally decrease over time, indicating that the model is learning.
 *   **Evaluation metrics**: If `eval_steps` is set (within `scripts/train_llm.py`), the model will be evaluated periodically on a validation set, showing metrics like validation loss.
-*   **Model checkpoints**: Intermediate models will be saved in the `output_dir` at specified `save_steps`.
+*   **Model checkpoints**: Intermediate models are written to `checkpoint_dir` (or `output_dir` if not set) at the interval defined by `save_steps`. Keeping `checkpoint_dir` on local storage avoids filling Google Drive's trash.
 
 Upon successful completion, a `final_model` directory will be created inside your specified `output_dir` (e.g., `./models/runyoro_llm_model/final_model`), containing the trained model weights and tokenizer files.
 

@@ -1,6 +1,7 @@
 import os
 import argparse
 import logging
+import shutil
 from datasets import Dataset
 from transformers import (
     AutoTokenizer,
@@ -29,6 +30,8 @@ def train_llm(
     eval_steps: int = 500,
     gradient_accumulation_steps: int = 1,
     cache_dir: str | None = None,
+    checkpoint_dir: str | None = None,
+    cleanup_checkpoints: bool = False,
 ):
     logging.info(f"Loading dataset from {processed_data_path}")
 
@@ -88,8 +91,10 @@ def train_llm(
 
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
+    training_output_dir = checkpoint_dir if checkpoint_dir else output_dir
+
     training_args = TrainingArguments(
-        output_dir=output_dir,
+        output_dir=training_output_dir,
         overwrite_output_dir=True,
         num_train_epochs=num_train_epochs,
         per_device_train_batch_size=per_device_train_batch_size,
@@ -101,7 +106,7 @@ def train_llm(
         eval_strategy="steps",  # Changed from evaluation_strategy
         eval_steps=eval_steps,
         gradient_accumulation_steps=gradient_accumulation_steps,
-        fp16=False, # Disable mixed precision for Apple Silicon/Mac
+        fp16=False,  # Disable mixed precision for Apple Silicon/Mac
     )
 
     trainer = Trainer(
@@ -115,12 +120,12 @@ def train_llm(
 
     # --- Automated checkpoint resumption ---
     latest_checkpoint = None
-    if os.path.isdir(output_dir):
-        checkpoints = [d for d in os.listdir(output_dir) if d.startswith("checkpoint-")]
+    if os.path.isdir(training_output_dir):
+        checkpoints = [d for d in os.listdir(training_output_dir) if d.startswith("checkpoint-")]
         if checkpoints:
             # Sort by checkpoint number
             checkpoints = sorted(checkpoints, key=lambda x: int(x.split("-")[-1]))
-            latest_checkpoint = os.path.join(output_dir, checkpoints[-1])
+            latest_checkpoint = os.path.join(training_output_dir, checkpoints[-1])
             logging.info(f"Resuming from latest checkpoint: {latest_checkpoint}")
 
     logging.info("Starting training...")
@@ -129,9 +134,22 @@ def train_llm(
     else:
         trainer.train()
 
-    logging.info(f"Saving final model to {output_dir}/final_model")
-    trainer.save_model(f"{output_dir}/final_model")
-    tokenizer.save_pretrained(f"{output_dir}/final_model")
+    logging.info(f"Saving final model to {training_output_dir}/final_model")
+    trainer.save_model(f"{training_output_dir}/final_model")
+    tokenizer.save_pretrained(f"{training_output_dir}/final_model")
+
+    if training_output_dir != output_dir:
+        final_dest = os.path.join(output_dir, "final_model")
+        os.makedirs(output_dir, exist_ok=True)
+        logging.info(f"Copying final model to {final_dest}")
+        shutil.copytree(
+            os.path.join(training_output_dir, "final_model"),
+            final_dest,
+            dirs_exist_ok=True,
+        )
+        if cleanup_checkpoints:
+            logging.info(f"Cleaning up checkpoint directory {training_output_dir}")
+            shutil.rmtree(training_output_dir, ignore_errors=True)
 
     logging.info("Training complete.")
 
@@ -165,6 +183,12 @@ if __name__ == "__main__":
         help="Directory where the tokenizer will be saved.",
     )
     parser.add_argument(
+        "--checkpoint_dir",
+        type=str,
+        default=None,
+        help="Directory for intermediate training checkpoints (defaults to output_dir)",
+    )
+    parser.add_argument(
         "--vocab_size",
         type=int,
         default=5000,
@@ -181,6 +205,12 @@ if __name__ == "__main__":
         type=int,
         default=4,
         help="Batch size per device during training.",
+    )
+    parser.add_argument(
+        "--save_total_limit",
+        type=int,
+        default=2,
+        help="Total number of checkpoints to keep during training.",
     )
     parser.add_argument(
         "--learning_rate",
@@ -200,6 +230,11 @@ if __name__ == "__main__":
         default=None,
         help="Optional directory for Hugging Face dataset cache.",
     )
+    parser.add_argument(
+        "--cleanup_checkpoints",
+        action="store_true",
+        help="Remove checkpoint_dir after copying the final model to output_dir.",
+    )
 
     args = parser.parse_args()
     train_llm(
@@ -213,6 +248,9 @@ if __name__ == "__main__":
         learning_rate=args.learning_rate,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         cache_dir=args.cache_dir,
+        checkpoint_dir=args.checkpoint_dir,
+        save_total_limit=args.save_total_limit,
+        cleanup_checkpoints=args.cleanup_checkpoints,
     )
 
 
