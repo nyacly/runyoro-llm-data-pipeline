@@ -127,20 +127,40 @@ def train_llm(
     )
 
 
-    # --- Automated checkpoint resumption ---
+   # --- Re-enabled Automated checkpoint resumption with robustness check ---
     latest_checkpoint = None
     if os.path.isdir(training_output_dir):
         checkpoints = [d for d in os.listdir(training_output_dir) if d.startswith("checkpoint-")]
         if checkpoints:
-            # Sort by checkpoint number
-            checkpoints = sorted(checkpoints, key=lambda x: int(x.split("-")[-1]))
-            latest_checkpoint = os.path.join(training_output_dir, checkpoints[-1])
-            logging.info(f"Resuming from latest checkpoint: {latest_checkpoint}")
+            # Sort by checkpoint number to find the true latest
+            checkpoints.sort(key=lambda x: int(x.split('-')[-1]))
+            candidate_checkpoint = os.path.join(training_output_dir, checkpoints[-1])
 
-    logging.info("Starting training...")
+            # --- ROBUSTNESS CHECK: Verify if the candidate checkpoint is actually valid ---
+            # A valid checkpoint should at least contain the model weights
+            # It could be 'model.safetensors' or 'pytorch_model.bin' depending on save format
+            model_safetensors_exists = os.path.exists(os.path.join(candidate_checkpoint, "model.safetensors"))
+            pytorch_model_exists = os.path.exists(os.path.join(candidate_checkpoint, "pytorch_model.bin"))
+
+            if model_safetensors_exists or pytorch_model_exists:
+                latest_checkpoint = candidate_checkpoint
+                logging.info(f"Found and validated latest checkpoint: {latest_checkpoint}")
+            else:
+                logging.warning(f"Found checkpoint folder '{candidate_checkpoint}' but it appears incomplete (missing model files). Starting fresh.")
+                # If incomplete, treat as if no valid checkpoint was found
+                latest_checkpoint = None
+        else:
+            logging.info("No checkpoint folders found in output directory. Starting fresh.")
+    else:
+        logging.info("Output directory does not exist. Starting fresh.") # This might not happen often if you create it earlier
+
+
+    # Proceed with training or resumption
     if latest_checkpoint:
+        logging.info(f"Resuming training from checkpoint: {latest_checkpoint}") # Moved log message
         trainer.train(resume_from_checkpoint=latest_checkpoint)
     else:
+        logging.info("Starting training fresh (no valid checkpoint found).") # More specific log
         trainer.train()
 
     logging.info(f"Saving final model to {training_output_dir}/final_model")
