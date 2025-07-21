@@ -17,6 +17,7 @@ webdriver-manager==4.0.2
 
 # Audio transcription
 faster-whisper
+aeneas==1.7.3.0
 
 # System level utilities required for OCR, PDF and media processing
 # The following are system-level packages typically installed via apt or brew
