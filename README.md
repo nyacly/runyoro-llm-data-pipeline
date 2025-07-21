@@ -67,8 +67,11 @@ After processing completes, a tokenizer is trained or updated using the text in 
 #### Example: Processing an Audio/Text Pair Directory
 
 If you have a folder containing multiple audio files with matching transcript
-files, you can process the entire directory at once. The audio and text files
-must share the same base filename, such as `sample1.wav` and `sample1.txt`.
+files, you can process the entire directory at once. **Each audio file must
+have a transcript with the exact same base filename**, for example
+`sample1.wav` with `sample1.txt`.  The directory path is supplied to the
+orchestrator with the source type `audio_text_pair` so every pair is processed
+together.
 
 ```
 raw_data/test_audio_pairs/
@@ -91,9 +94,17 @@ process_data_source(
 )
 ```
 
+The orchestrator standardizes each audio file, cleans the accompanying text and
+runs forced alignment to generate a JSON file with timestamps. The resulting
+metadata entry for each pair includes a `pair_id` and the path to the alignment
+file alongside the processed audio segments and transcript.
+
 Each detected pair will appear in `processed_data_metadata.json` with a
 `pair_id` linking the processed audio segments to the corresponding transcript
-file, enabling easy alignment for STT model training.
+file. The pipeline now performs **forced alignment** on each pair using the
+`aeneas` library when available. This generates a JSON file with start/end
+timestamps for every line of the transcript, making the data immediately usable
+for STT or TTS training.
 
 `scripts/test_pipeline.py` remains as a simple example showing how to call `process_data_source` directly if you need more control or want to integrate specific sources (like websites) manually.
 
