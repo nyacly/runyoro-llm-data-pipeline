@@ -15,7 +15,7 @@ def _text_iterator(text_dir: str) -> Iterable[str]:
             logging.error(f"Error reading {path}: {e}")
 
 
-def train_tokenizer(processed_text_dir: str, tokenizer_dir: str, base_model_name: str = "gpt2", vocab_size: int = 5000):
+def train_tokenizer(processed_text_dir: str, tokenizer_dir: str, base_model_name: str = "google/mt5-small", vocab_size: int = 5000):
     """Train a tokenizer on all text files in ``processed_text_dir``.
 
     The tokenizer is initialized from ``base_model_name`` so special tokens match
