@@ -131,25 +131,37 @@ def train_llm(
     elif mixed_precision == "bf16":
         bf16 = True
 
-    training_args = TrainingArguments(
-        output_dir=training_output_dir,
-        overwrite_output_dir=True,
-        num_train_epochs=num_train_epochs,
-        per_device_train_batch_size=per_device_train_batch_size,
-        save_steps=save_steps,
-        save_total_limit=save_total_limit,
-        logging_steps=logging_steps,
-        learning_rate=learning_rate,
-        warmup_steps=warmup_steps,
-        weight_decay=weight_decay,
-        evaluation_strategy="steps",
-        eval_steps=eval_steps,
-        gradient_accumulation_steps=gradient_accumulation_steps,
-        fp16=fp16,
-        bf16=bf16,
-        run_name="runyoro_llm_v2",
-        report_to=["wandb"] if use_wandb else None,
-    )
+    # Build arguments for TrainingArguments but ensure compatibility with older
+    # Transformers versions that may not support some parameters like
+    # ``evaluation_strategy``.
+    import inspect
+
+    training_args_kwargs = {
+        "output_dir": training_output_dir,
+        "overwrite_output_dir": True,
+        "num_train_epochs": num_train_epochs,
+        "per_device_train_batch_size": per_device_train_batch_size,
+        "save_steps": save_steps,
+        "save_total_limit": save_total_limit,
+        "logging_steps": logging_steps,
+        "learning_rate": learning_rate,
+        "warmup_steps": warmup_steps,
+        "weight_decay": weight_decay,
+        "evaluation_strategy": "steps",
+        "eval_steps": eval_steps,
+        "gradient_accumulation_steps": gradient_accumulation_steps,
+        "fp16": fp16,
+        "bf16": bf16,
+        "run_name": "runyoro_llm_v2",
+        "report_to": ["wandb"] if use_wandb else None,
+    }
+
+    init_params = inspect.signature(TrainingArguments.__init__).parameters
+    filtered_kwargs = {
+        k: v for k, v in training_args_kwargs.items() if k in init_params
+    }
+
+    training_args = TrainingArguments(**filtered_kwargs)
 
     trainer = Trainer(
         model=model,
