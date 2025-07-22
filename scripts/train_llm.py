@@ -65,12 +65,25 @@ def train_llm(
             f"Processed data directory not found: {processed_data_full_path}"
         )
 
-    dataset = load_dataset(
-        "text",
-        data_files=f"{processed_data_full_path}/*.txt",
-        cache_dir=cache_dir or "/tmp/hf_datasets_cache",
-        keep_in_memory=True,
-    )["train"]
+    try:
+        dataset = load_dataset(
+            "text",
+            data_files=f"{processed_data_full_path}/*.txt",
+            cache_dir=cache_dir or "/tmp/hf_datasets_cache",
+            keep_in_memory=True,
+        )["train"]
+    except NotImplementedError as e:
+        if "LocalFileSystem" in str(e):
+            logging.warning(
+                "In-memory loading not supported on this 'datasets' version; falling back to disk cache."
+            )
+            dataset = load_dataset(
+                "text",
+                data_files=f"{processed_data_full_path}/*.txt",
+                cache_dir=cache_dir or "/tmp/hf_datasets_cache",
+            )["train"]
+        else:
+            raise
     logging.info(f"Dataset size: {len(dataset)} examples")
 
     # Ensure we have a validation split
