@@ -75,13 +75,20 @@ def train_llm(
     except NotImplementedError as e:
         if "LocalFileSystem" in str(e):
             logging.warning(
-                "In-memory loading not supported on this 'datasets' version; falling back to disk cache."
+                "In-memory loading not supported on this 'datasets' version; falling back to manual loading."
             )
-            dataset = load_dataset(
-                "text",
-                data_files=f"{processed_data_full_path}/*.txt",
-                cache_dir=cache_dir or "/tmp/hf_datasets_cache",
-            )["train"]
+            # Manually read the text files and create the Dataset in-memory.
+            import glob
+
+            text_files = sorted(glob.glob(f"{processed_data_full_path}/*.txt"))
+            texts = []
+            for path in text_files:
+                with open(path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                    if content.strip():
+                        texts.append(content)
+
+            dataset = Dataset.from_dict({"text": texts})
         else:
             raise
     logging.info(f"Dataset size: {len(dataset)} examples")
