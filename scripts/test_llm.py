@@ -1,6 +1,15 @@
 import argparse
 import logging
-from transformers import AutoTokenizer, AutoModelForCausalLM, GenerationConfig
+"""Utility to generate text with a trained seq2seq model.
+
+Historically this script attempted to load the model with
+``AutoModelForCausalLM`` which only works with decoder-only architectures.
+The Runyoro LLM is based on MT5 (a sequence-to-sequence model), so we need
+``AutoModelForSeq2SeqLM`` to correctly load it.  This change prevents errors
+such as ``Unrecognized configuration class ... MT5Config`` during loading.
+"""
+
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, GenerationConfig
 import torch
 import os
 
@@ -31,7 +40,7 @@ def test_llm(
     logging.info(f"Loading model and tokenizer from {model_path}")
     try:
         tokenizer = AutoTokenizer.from_pretrained(model_path)
-        model = AutoModelForCausalLM.from_pretrained(model_path)
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_path)
     except Exception as e:
         logging.error(f"Error loading model or tokenizer from {model_path}: {e}")
         logging.info("Please ensure the model path is correct and contains valid Hugging Face model files.")
