@@ -36,7 +36,7 @@ def train_llm(
     mixed_precision: str | None = "fp16",
     use_wandb: bool = False,
 ):
-    """Train or resume a causal language model.
+    """Train or resume a sequence-to-sequence language model.
 
     Increasing ``num_train_epochs`` allows longer training runs. Pass
     ``--num_train_epochs 5`` (or higher) on the command line to train for
@@ -114,7 +114,7 @@ def train_llm(
     eval_dataset = tokenized_datasets["test"]
 
     logging.info(f"Loading model: {model_name}")
-    model = AutoModelForCausalLM.from_pretrained(
+    model = AutoModelForSeq2SeqLM.from_pretrained(
         model_name, ignore_mismatched_sizes=True
     )
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
