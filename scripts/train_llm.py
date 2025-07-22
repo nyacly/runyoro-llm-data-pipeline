@@ -5,7 +5,7 @@ import shutil
 from datasets import Dataset, load_dataset
 from transformers import (
     AutoTokenizer,
-    AutoModelForCausalLM,
+    AutoModelForSeq2SeqLM,
     TrainingArguments,
     Trainer,
     DataCollatorForLanguageModeling,
@@ -68,6 +68,7 @@ def train_llm(
     dataset = load_dataset(
         "text",
         data_files=f"{processed_data_full_path}/*.txt",
+        cache_dir=cache_dir,
     )["train"]
     logging.info(f"Dataset size: {len(dataset)} examples")
 
@@ -207,7 +208,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model_name",
         type=str,
-        default="gpt2", # Start with a small, accessible model like GPT-2
+        default="google/mt5-small",
         help="Pre-trained model name from Hugging Face Transformers (e.g., gpt2, distilgpt2, facebook/opt-125m).",
     )
     parser.add_argument(
