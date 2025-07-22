@@ -68,7 +68,8 @@ def train_llm(
     dataset = load_dataset(
         "text",
         data_files=f"{processed_data_full_path}/*.txt",
-        cache_dir="/tmp/hf_datasets_cache",
+        cache_dir=cache_dir or "/tmp/hf_datasets_cache",
+        keep_in_memory=True,
     )["train"]
     logging.info(f"Dataset size: {len(dataset)} examples")
 
