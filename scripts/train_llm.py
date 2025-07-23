@@ -202,10 +202,17 @@ def train_llm(
 
     # Proceed with training or resumption
     if latest_checkpoint:
-        logging.info(f"Resuming training from checkpoint: {latest_checkpoint}") # Moved log message
-        trainer.train(resume_from_checkpoint=latest_checkpoint)
+        logging.info(f"Resuming training from checkpoint: {latest_checkpoint}")
+        try:
+            trainer.train(resume_from_checkpoint=latest_checkpoint)
+        except RuntimeError as e:
+            logging.error(
+                f"Failed to load checkpoint due to incompatible model parameters: {e}"
+            )
+            logging.info("Starting training from scratch instead.")
+            trainer.train()
     else:
-        logging.info("Starting training fresh (no valid checkpoint found).") # More specific log
+        logging.info("Starting training fresh (no valid checkpoint found).")
         trainer.train()
 
     logging.info(f"Saving final model to {training_output_dir}/final_model")
