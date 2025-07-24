@@ -348,11 +348,21 @@ Refer to the individual Python files in the `scripts/` directory for detailed in
 
 ### Troubleshooting NaN Gradients
 
-If training logs show `grad_norm: nan` or losses become `nan`, it usually
-indicates numerical instability or exploding gradients. Try the following:
+If training logs show `grad_norm: nan` or losses become `nan`, the model is
+experiencing numerical instability. The steps below summarize common fixes:
 
-1. **Validate input data** – check for NaNs in the tokenized dataset using a
-   simple NumPy check:
+1. **Check mixed precision** – disable `fp16` or switch to `bf16` by setting
+   `--mixed_precision bf16` (or remove the flag entirely) if `fp16` causes
+   instability.
+
+2. **Lower the learning rate** – values around `1e-5` help keep gradients
+   bounded when fine-tuning large models.
+
+3. **Use gradient clipping** – pass `--max_grad_norm 1.0` (or similar) to keep
+   gradients from exploding.
+
+4. **Verify your data** – ensure tokenized inputs contain no NaNs. A quick check
+   in Python looks like:
 
    ```python
    import numpy as np
@@ -361,17 +371,8 @@ indicates numerical instability or exploding gradients. Try the following:
            raise ValueError("NaN found in input_ids")
    ```
 
-2. **Lower the learning rate** – start around `1e-5` and adjust upward only if
-   training remains stable.
-
-3. **Enable gradient clipping** – pass `--max_grad_norm 1.0` (or similar) to
-   `scripts/train_llm.py` to limit gradient explosions.
-
-4. **Monitor training with TensorBoard** – run `tensorboard --logdir ./logs`
-   while training to visualize loss and gradient norms over time.
-
-5. **Mixed precision issues** – if using `fp16` and encountering NaNs, try
-   switching to full precision by setting `--mixed_precision fp32`.
+5. **Adjust training settings** – try smaller batch sizes and monitor logs (for
+   example with TensorBoard) for early signs of divergence.
 
 ## Contributing
 
