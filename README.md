@@ -41,7 +41,13 @@ Install the required Python packages using pip:
 
 ```bash
 pip install -r requirements.txt
+python3 setup_env.py
 ```
+
+Running `setup_env.py` removes any TensorFlow installation and installs
+pinned versions of PyTorch, Transformers, Datasets and W&B. This avoids
+CUDA library registration errors that can occur when TensorFlow is
+present.
 
 #### 1.3. Install System Dependencies
 
@@ -235,7 +241,11 @@ For cloud environments, the setup process is similar but often simpler due to pr
 3.  **Install Python Dependencies**: In a new code cell:
     ```python
     !pip install -r requirements.txt
+    !python3 setup_env.py
     ```
+    Running this script in Colab uninstalls TensorFlow and reinstalls
+    compatible versions of PyTorch and Transformers, preventing CUDA
+    library registration errors.
 4.  **Install System Dependencies**: Colab usually has `ffmpeg` pre-installed. For `poppler` and `tesseract`, you might need to install them via `apt-get`:
     ```python
     !sudo apt-get update

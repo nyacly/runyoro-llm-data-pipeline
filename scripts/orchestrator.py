@@ -3,6 +3,7 @@ import json
 import hashlib
 import logging
 import requests
+from datetime import datetime
 
 from scripts.text_processing import process_text_source
 from scripts.audio_processing import process_audio_source
@@ -119,7 +120,7 @@ def process_data_source(
                     "original_source_hash": original_source_content_hash,
                     "processed_path": processed_filepath,
                     "data_type": "text",
-                    "timestamp": "2025-06-20T10:00:00Z",
+                    "timestamp": datetime.utcnow().isoformat() + "Z",
                 }
             )
     elif source_type == "audio":
@@ -137,7 +138,7 @@ def process_data_source(
                     "processed_path": segment_info["path"],
                     "segment_index": segment_info["segment_index"],
                     "data_type": "audio_segment",
-                    "timestamp": "2025-06-20T10:00:00Z",
+                    "timestamp": datetime.utcnow().isoformat() + "Z",
                 }
             )
     elif source_type == "video":
@@ -155,7 +156,7 @@ def process_data_source(
                     "processed_path": segment_info["path"],
                     "segment_index": segment_info["segment_index"],
                     "data_type": "audio_segment_from_video",
-                    "timestamp": "2025-06-20T10:00:00Z",
+                    "timestamp": datetime.utcnow().isoformat() + "Z",
                 }
             )
     elif source_type == "audio_text_pair":
@@ -174,7 +175,7 @@ def process_data_source(
                     "processed_text_path": pair["processed_text"],
                     "alignment_path": pair.get("alignment"),
                     "data_type": "audio_text_aligned",
-                    "timestamp": "2025-06-20T10:00:00Z",
+                    "timestamp": datetime.utcnow().isoformat() + "Z",
                 }
             )
     else:
