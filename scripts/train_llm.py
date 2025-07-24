@@ -12,7 +12,10 @@ from transformers import (
 )
 from scripts.tokenizer_utils import train_tokenizer
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 def train_llm(
     processed_data_path: str,
@@ -30,6 +33,7 @@ def train_llm(
     weight_decay: float = 0.01,
     eval_steps: int = 500,
     gradient_accumulation_steps: int = 1,
+    max_grad_norm: float = 1.0,
     cache_dir: str | None = None,
     checkpoint_dir: str | None = None,
     cleanup_checkpoints: bool = False,
@@ -55,6 +59,9 @@ def train_llm(
 
     ``warmup_steps`` now defaults to 5 so the scheduler quickly reaches the base
     learning rate when training on small datasets.
+
+    ``max_grad_norm`` can be adjusted to clip exploding gradients if training
+    becomes unstable.
     """
     logging.info(f"Loading dataset from {processed_data_path}")
 
@@ -103,7 +110,9 @@ def train_llm(
     dataset = dataset.train_test_split(test_size=0.1)
 
     logging.info("Training/Updating tokenizer...")
-    tokenizer = train_tokenizer(processed_data_path, tokenizer_dir, model_name, vocab_size)
+    tokenizer = train_tokenizer(
+        processed_data_path, tokenizer_dir, model_name, vocab_size
+    )
     if tokenizer.pad_token is None:
         tokenizer.add_special_tokens({"pad_token": "[PAD]"})
 
@@ -114,7 +123,10 @@ def train_llm(
 
     logging.info("Tokenizing dataset...")
     tokenized_datasets = dataset.map(
-        tokenize_function, batched=True, num_proc=os.cpu_count(), remove_columns=["text"]
+        tokenize_function,
+        batched=True,
+        num_proc=os.cpu_count(),
+        remove_columns=["text"],
     )
 
     # Datasets were already split earlier
@@ -159,6 +171,7 @@ def train_llm(
         "evaluation_strategy": "steps",
         "eval_steps": eval_steps,
         "gradient_accumulation_steps": gradient_accumulation_steps,
+        "max_grad_norm": max_grad_norm,
         "fp16": fp16,
         "bf16": bf16,
         "run_name": "runyoro_llm_v2",
@@ -171,9 +184,7 @@ def train_llm(
     }
 
     training_args = TrainingArguments(**filtered_kwargs)
-    logging.info(
-        f"Actual warmup_steps used by Trainer: {training_args.warmup_steps}"
-    )
+    logging.info(f"Actual warmup_steps used by Trainer: {training_args.warmup_steps}")
 
     trainer = Trainer(
         model=model,
@@ -183,34 +194,46 @@ def train_llm(
         data_collator=data_collator,
     )
 
-
-   # --- Re-enabled Automated checkpoint resumption with robustness check ---
+    # --- Re-enabled Automated checkpoint resumption with robustness check ---
     latest_checkpoint = None
     if os.path.isdir(training_output_dir):
-        checkpoints = [d for d in os.listdir(training_output_dir) if d.startswith("checkpoint-")]
+        checkpoints = [
+            d for d in os.listdir(training_output_dir) if d.startswith("checkpoint-")
+        ]
         if checkpoints:
             # Sort by checkpoint number to find the true latest
-            checkpoints.sort(key=lambda x: int(x.split('-')[-1]))
+            checkpoints.sort(key=lambda x: int(x.split("-")[-1]))
             candidate_checkpoint = os.path.join(training_output_dir, checkpoints[-1])
 
             # --- ROBUSTNESS CHECK: Verify if the candidate checkpoint is actually valid ---
             # A valid checkpoint should at least contain the model weights
             # It could be 'model.safetensors' or 'pytorch_model.bin' depending on save format
-            model_safetensors_exists = os.path.exists(os.path.join(candidate_checkpoint, "model.safetensors"))
-            pytorch_model_exists = os.path.exists(os.path.join(candidate_checkpoint, "pytorch_model.bin"))
+            model_safetensors_exists = os.path.exists(
+                os.path.join(candidate_checkpoint, "model.safetensors")
+            )
+            pytorch_model_exists = os.path.exists(
+                os.path.join(candidate_checkpoint, "pytorch_model.bin")
+            )
 
             if model_safetensors_exists or pytorch_model_exists:
                 latest_checkpoint = candidate_checkpoint
-                logging.info(f"Found and validated latest checkpoint: {latest_checkpoint}")
+                logging.info(
+                    f"Found and validated latest checkpoint: {latest_checkpoint}"
+                )
             else:
-                logging.warning(f"Found checkpoint folder '{candidate_checkpoint}' but it appears incomplete (missing model files). Starting fresh.")
+                logging.warning(
+                    f"Found checkpoint folder '{candidate_checkpoint}' but it appears incomplete (missing model files). Starting fresh."
+                )
                 # If incomplete, treat as if no valid checkpoint was found
                 latest_checkpoint = None
         else:
-            logging.info("No checkpoint folders found in output directory. Starting fresh.")
+            logging.info(
+                "No checkpoint folders found in output directory. Starting fresh."
+            )
     else:
-        logging.info("Output directory does not exist. Starting fresh.") # This might not happen often if you create it earlier
-
+        logging.info(
+            "Output directory does not exist. Starting fresh."
+        )  # This might not happen often if you create it earlier
 
     # Proceed with training or resumption
     if latest_checkpoint:
@@ -246,8 +269,11 @@ def train_llm(
 
     logging.info("Training complete.")
 
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train a sequence-to-sequence LLM for Runyoro/Rutooro.")
+    parser = argparse.ArgumentParser(
+        description="Train a sequence-to-sequence LLM for Runyoro/Rutooro."
+    )
     parser.add_argument(
         "--processed_data_path",
         type=str,
@@ -324,6 +350,12 @@ if __name__ == "__main__":
         help="Number of updates steps to accumulate before performing a backward/update pass.",
     )
     parser.add_argument(
+        "--max_grad_norm",
+        type=float,
+        default=1.0,
+        help="Maximum gradient norm for clipping to avoid exploding gradients.",
+    )
+    parser.add_argument(
         "--cache_dir",
         type=str,
         default=None,
@@ -362,6 +394,7 @@ if __name__ == "__main__":
         learning_rate=args.learning_rate,
         warmup_steps=args.warmup_steps,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
+        max_grad_norm=args.max_grad_norm,
         cache_dir=args.cache_dir,
         checkpoint_dir=args.checkpoint_dir,
         save_total_limit=args.save_total_limit,
@@ -369,5 +402,3 @@ if __name__ == "__main__":
         mixed_precision=args.mixed_precision,
         use_wandb=args.use_wandb,
     )
-
-
