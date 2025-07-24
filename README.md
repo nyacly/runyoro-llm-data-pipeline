@@ -371,7 +371,11 @@ experiencing numerical instability. The steps below summarize common fixes:
            raise ValueError("NaN found in input_ids")
    ```
 
-5. **Adjust training settings** – try smaller batch sizes and monitor logs (for
+5. **Ensure you have enough data** – training on an empty or tiny dataset can
+   produce zero or NaN gradients. Check that `processed_data/processed_text/`
+   contains non-empty `.txt` files before starting training.
+
+6. **Adjust training settings** – try smaller batch sizes and monitor logs (for
    example with TensorBoard) for early signs of divergence.
 
 ## Contributing

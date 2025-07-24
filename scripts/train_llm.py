@@ -130,6 +130,13 @@ def train_llm(
             raise
     logging.info(f"Dataset size: {len(dataset)} examples")
 
+    if len(dataset) == 0:
+        raise ValueError(
+            f"No training examples were found in {processed_data_full_path}."
+            " Ensure the directory contains non-empty .txt files before running"
+            " training."
+        )
+
     # Ensure we have a validation split
     dataset = dataset.train_test_split(test_size=0.1)
 
