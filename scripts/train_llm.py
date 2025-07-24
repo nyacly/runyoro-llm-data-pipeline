@@ -238,7 +238,7 @@ def train_llm(
     logging.info("Training complete.")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train a causal LLM for Runyoro/Rutooro.")
+    parser = argparse.ArgumentParser(description="Train a sequence-to-sequence LLM for Runyoro/Rutooro.")
     parser.add_argument(
         "--processed_data_path",
         type=str,
