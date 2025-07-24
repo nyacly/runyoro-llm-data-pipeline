@@ -41,6 +41,7 @@ Install the required Python packages using pip:
 
 ```bash
 pip install -r requirements.txt
+python3 setup_env.py
 ```
 
 #### 1.3. Run the Environment Setup Script
@@ -55,6 +56,7 @@ python3 setup_env.py
 ```
 
 #### 1.4. Install System Dependencies
+
 
 This pipeline relies on external tools for PDF processing (Poppler), OCR (Tesseract), and audio/video manipulation (FFmpeg). Install them using Homebrew:
 
@@ -249,7 +251,8 @@ For cloud environments, the setup process is similar but often simpler due to pr
 3.  **Install Python Dependencies**: In a new code cell:
     ```python
     !pip install -r requirements.txt
-    ```
+    !python3 setup_env.py
+
 4.  **Run the Environment Setup Script**: This script removes TensorFlow and
     reinstalls PyTorch and Transformers to prevent CUDA library registration
     errors. Run it before training:
