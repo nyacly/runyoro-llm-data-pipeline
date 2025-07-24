@@ -9,8 +9,24 @@ from transformers import (
     TrainingArguments,
     Trainer,
     DataCollatorForSeq2Seq,
+    TrainerCallback,
 )
 from scripts.tokenizer_utils import train_tokenizer
+import math
+
+
+class NanDetectionCallback(TrainerCallback):
+    """Detect and log NaN values in training metrics."""
+
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if not logs:
+            return
+        grad_norm = logs.get("grad_norm")
+        loss = logs.get("loss")
+        if grad_norm is not None and isinstance(grad_norm, float) and math.isnan(grad_norm):
+            logging.warning("grad_norm became NaN. Training may be unstable.")
+        if loss is not None and isinstance(loss, float) and math.isnan(loss):
+            logging.warning("Loss became NaN. Check data and hyperparameters.")
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -129,6 +145,15 @@ def train_llm(
         remove_columns=["text"],
     )
 
+    # Optional sanity check for NaNs in the tokenized dataset
+    import numpy as np
+    for split_name in ["train", "test"]:
+        ds = tokenized_datasets[split_name]
+        for col in ["input_ids", "labels"]:
+            arr = np.array(ds[col])
+            if np.isnan(arr).any():
+                raise ValueError(f"NaN detected in {split_name} dataset column {col}")
+
     # Datasets were already split earlier
     train_dataset = tokenized_datasets["train"]
     eval_dataset = tokenized_datasets["test"]
@@ -193,6 +218,7 @@ def train_llm(
         eval_dataset=eval_dataset,
         data_collator=data_collator,
     )
+    trainer.add_callback(NanDetectionCallback())
 
     # --- Re-enabled Automated checkpoint resumption with robustness check ---
     latest_checkpoint = None
