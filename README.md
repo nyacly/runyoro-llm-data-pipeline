@@ -141,9 +141,9 @@ python3 scripts/train_llm.py \
 Increasing `--num_train_epochs` lets the model train longer. When `--use_wandb`
 is supplied, training and evaluation losses are logged to your Weights & Biases
 dashboard. Watch the `eval_loss` curve—if it starts to rise while the training
-loss keeps dropping, stop the run to avoid overfitting. You can further
-experiment with `--learning_rate` or `--gradient_accumulation_steps` if the
-model isn't converging well.
+loss keeps dropping, stop the run to avoid overfitting. If training becomes
+unstable (for example the loss turns `nan`), lower `--learning_rate` and enable
+gradient clipping with `--max_grad_norm`.
 
 **Key Parameters:**
 
@@ -157,6 +157,7 @@ model isn't converging well.
 *   `--cleanup_checkpoints`: If set, the `checkpoint_dir` will be removed after the final model is copied to `output_dir`.
 *   `--mixed_precision`: Set to `fp16` or `bf16` to enable faster mixed‑precision training on GPU (recommended on Colab Pro+).
 *   `--warmup_steps`: Number of warm-up steps for the learning rate scheduler. Defaults to `5` so small datasets reach the base learning rate quickly.
+*   `--max_grad_norm`: Maximum gradient norm. Lowering this can help prevent exploding gradients during training.
 
 **Expected Results during Training:**
 
