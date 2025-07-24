@@ -4,6 +4,8 @@ from pathlib import Path
 from typing import Iterable
 from transformers import AutoTokenizer
 
+BYTE_LEVEL_TOKENIZERS = {"ByT5Tokenizer", "ByT5TokenizerFast"}
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def _text_iterator(text_dir: str) -> Iterable[str]:
@@ -24,8 +26,11 @@ def train_tokenizer(processed_text_dir: str, tokenizer_dir: str, base_model_name
     logging.info(f"Training tokenizer from data in {processed_text_dir}")
     tokenizer = AutoTokenizer.from_pretrained(base_model_name)
 
-    iterator = _text_iterator(processed_text_dir)
-    tokenizer = tokenizer.train_new_from_iterator(iterator, vocab_size=vocab_size)
+    if tokenizer.__class__.__name__ in BYTE_LEVEL_TOKENIZERS:
+        logging.info("ByT5 uses a fixed byte-level vocabulary; skipping tokenizer training.")
+    else:
+        iterator = _text_iterator(processed_text_dir)
+        tokenizer = tokenizer.train_new_from_iterator(iterator, vocab_size=vocab_size)
 
     os.makedirs(tokenizer_dir, exist_ok=True)
     tokenizer.save_pretrained(tokenizer_dir)

@@ -62,7 +62,7 @@ python3 scripts/process_raw_data.py
 ```
 
 This script detects the file type (PDF, image, audio, video, or text) and calls the orchestrator accordingly. Processed outputs are saved in `processed_data/`, and metadata is written to `processed_data/processed_data_metadata.json`.
-After processing completes, a tokenizer is trained or updated using the text in `processed_data/processed_text/` and saved to `./tokenizer`. This tokenizer will be reused during LLM and ASR training.
+After processing completes, a tokenizer is trained or updated using the text in `processed_data/processed_text/` and saved to `./tokenizer`. This tokenizer will be reused during LLM and ASR training. If you choose a byte‑level model such as **ByT5**, no training is performed—the tokenizer is simply loaded from the base model.
 
 #### Example: Processing an Audio/Text Pair Directory
 
