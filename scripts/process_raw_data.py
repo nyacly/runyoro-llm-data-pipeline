@@ -37,7 +37,7 @@ def process_all_raw_data(
     raw_data_dir: str = "./raw_data",
     processed_data_dir: str = "./processed_data",
     tokenizer_dir: str = "./tokenizer",
-    base_model_name: str = "gpt2",
+    base_model_name: str = "google/mt5-small",
     vocab_size: int = 5000,
 ):
     metadata_file = os.path.join(processed_data_dir, "processed_data_metadata.json")
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     parser.add_argument("--raw_data_dir", type=str, default="./raw_data")
     parser.add_argument("--processed_data_dir", type=str, default="./processed_data")
     parser.add_argument("--tokenizer_dir", type=str, default="./tokenizer")
-    parser.add_argument("--base_model_name", type=str, default="gpt2")
+    parser.add_argument("--base_model_name", type=str, default="google/mt5-small")
     parser.add_argument("--vocab_size", type=int, default=5000)
 
     args = parser.parse_args()
