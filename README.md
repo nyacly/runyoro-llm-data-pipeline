@@ -44,12 +44,19 @@ pip install -r requirements.txt
 python3 setup_env.py
 ```
 
-Running `setup_env.py` removes any TensorFlow installation and installs
-pinned versions of PyTorch, Transformers, Datasets and W&B. This avoids
-CUDA library registration errors that can occur when TensorFlow is
-present.
+#### 1.3. Run the Environment Setup Script
 
-#### 1.3. Install System Dependencies
+After installing the dependencies, run the provided setup script to ensure the
+correct versions of PyTorch and Transformers are installed and to remove
+TensorFlow. This avoids CUDA library registration errors that can occur when
+TensorFlow is present.
+
+```bash
+python3 setup_env.py
+```
+
+#### 1.4. Install System Dependencies
+
 
 This pipeline relies on external tools for PDF processing (Poppler), OCR (Tesseract), and audio/video manipulation (FFmpeg). Install them using Homebrew:
 
@@ -57,7 +64,7 @@ This pipeline relies on external tools for PDF processing (Poppler), OCR (Tesser
 brew install poppler tesseract ffmpeg
 ```
 
-#### 1.4. Run the Data Processing Pipeline
+#### 1.5. Run the Data Processing Pipeline
 
 Place your raw data (PDFs, images, audio, video, text files, or a list of URLs for websites) into the `raw_data/` directory. The repository now includes a convenience script that will iterate over everything in this folder and process it automatically.
 
@@ -123,6 +130,9 @@ environment.  This repository now provides Colab notebooks under
 `notebooks/` that automate the heavy training step.  After training finishes you
 can copy the `models/` directory back to your MacBook and continue with local
 testing or further fine‑tuning.
+When running in Colab, make sure to execute `python3 setup_env.py` after cloning
+the repository. This removes TensorFlow and reinstalls PyTorch/Transformers so
+the GPU initializes correctly before training.
 
 ### 2. LLM Training
 
@@ -242,23 +252,26 @@ For cloud environments, the setup process is similar but often simpler due to pr
     ```python
     !pip install -r requirements.txt
     !python3 setup_env.py
+
+4.  **Run the Environment Setup Script**: This script removes TensorFlow and
+    reinstalls PyTorch and Transformers to prevent CUDA library registration
+    errors. Run it before training:
+    ```python
+    !python3 setup_env.py
     ```
-    Running this script in Colab uninstalls TensorFlow and reinstalls
-    compatible versions of PyTorch and Transformers, preventing CUDA
-    library registration errors.
-4.  **Install System Dependencies**: Colab usually has `ffmpeg` pre-installed. For `poppler` and `tesseract`, you might need to install them via `apt-get`:
+5.  **Install System Dependencies**: Colab usually has `ffmpeg` pre-installed. For `poppler` and `tesseract`, you might need to install them via `apt-get`:
     ```python
     !sudo apt-get update
     !sudo apt-get install -y poppler-utils tesseract-ocr
     ```
-5.  **Upload Data**: If your raw data is in Google Drive, mount your Drive and copy/symlink the data to `raw_data/`:
+6.  **Upload Data**: If your raw data is in Google Drive, mount your Drive and copy/symlink the data to `raw_data/`:
     ```python
     from google.colab import drive
     drive.mount("/content/drive")
     !cp -r "/content/drive/MyDrive/path/to/your/raw_data/*" raw_data/
     ```
     Alternatively, upload directly to the `raw_data/` directory.
-6.  **Use the Provided Notebooks**: Instead of manually running each command,
+7.  **Use the Provided Notebooks**: Instead of manually running each command,
     open the notebooks in the `notebooks/` directory (`01_Process_Data.ipynb`,
     `02_Train_LLM_Stage1.ipynb`, and `03_Test_LLM.ipynb`).  These notebooks
     contain the commands needed for processing, training, and testing on Colab.

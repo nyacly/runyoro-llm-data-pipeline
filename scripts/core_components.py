@@ -44,8 +44,7 @@ def extract_text_from_image_ocr(image_or_path):
 
 def scrape_static_website(url):
     try:
-        # Set a timeout so the request doesn't hang indefinitely if the
-        # site is unresponsive. Adjust the value as needed.
+        # Use a timeout to avoid hanging indefinitely on slow or unresponsive servers
         response = requests.get(url, timeout=10)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, "html.parser")
