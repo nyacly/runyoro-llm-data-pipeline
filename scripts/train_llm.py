@@ -150,9 +150,17 @@ def train_llm(
     for split_name in ["train", "test"]:
         ds = tokenized_datasets[split_name]
         for col in ["input_ids", "labels"]:
-            arr = np.array(ds[col])
+            # Flatten the list of token sequences so ``np.isnan`` can operate
+            # on a one-dimensional NumPy array. ``ds[col]`` is a list of
+            # variable-length lists which cannot be directly converted to a
+            # NumPy array without specifying ``dtype=object``. Flattening
+            # avoids shape issues and still allows detection of invalid values.
+            flat_tokens = [t for seq in ds[col] for t in seq]
+            arr = np.asarray(flat_tokens, dtype=float)
             if np.isnan(arr).any():
-                raise ValueError(f"NaN detected in {split_name} dataset column {col}")
+                raise ValueError(
+                    f"NaN detected in {split_name} dataset column {col}"
+                )
 
     # Datasets were already split earlier
     train_dataset = tokenized_datasets["train"]
