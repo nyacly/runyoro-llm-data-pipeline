@@ -156,6 +156,7 @@ model isn't converging well.
 *   `--save_total_limit`: Number of checkpoints to keep (older ones are deleted).
 *   `--cleanup_checkpoints`: If set, the `checkpoint_dir` will be removed after the final model is copied to `output_dir`.
 *   `--mixed_precision`: Set to `fp16` or `bf16` to enable faster mixed‑precision training on GPU (recommended on Colab Pro+).
+*   `--warmup_steps`: Number of warm-up steps for the learning rate scheduler. Defaults to `5` so small datasets reach the base learning rate quickly.
 
 **Expected Results during Training:**
 
