@@ -105,7 +105,9 @@ def train_llm(
         tokenizer.add_special_tokens({"pad_token": "[PAD]"})
 
     def tokenize_function(examples):
-        return tokenizer(examples["text"], truncation=True, max_length=512)
+        tokens = tokenizer(examples["text"], truncation=True, max_length=512)
+        tokens["labels"] = tokens["input_ids"].copy()
+        return tokens
 
     logging.info("Tokenizing dataset...")
     tokenized_datasets = dataset.map(
