@@ -346,6 +346,33 @@ Refer to the individual Python files in the `scripts/` directory for detailed in
 *   `scripts/test_llm.py`: Script for testing the trained LLM by generating text.
 *   `scripts/transcribe_audio_whisper.py`: Utility script using Faster-Whisper to generate transcripts from audio or video files.
 
+### Troubleshooting NaN Gradients
+
+If training logs show `grad_norm: nan` or losses become `nan`, it usually
+indicates numerical instability or exploding gradients. Try the following:
+
+1. **Validate input data** – check for NaNs in the tokenized dataset using a
+   simple NumPy check:
+
+   ```python
+   import numpy as np
+   for batch in train_dataset:
+       if np.isnan(batch["input_ids"]).any():
+           raise ValueError("NaN found in input_ids")
+   ```
+
+2. **Lower the learning rate** – start around `1e-5` and adjust upward only if
+   training remains stable.
+
+3. **Enable gradient clipping** – pass `--max_grad_norm 1.0` (or similar) to
+   `scripts/train_llm.py` to limit gradient explosions.
+
+4. **Monitor training with TensorBoard** – run `tensorboard --logdir ./logs`
+   while training to visualize loss and gradient norms over time.
+
+5. **Mixed precision issues** – if using `fp16` and encountering NaNs, try
+   switching to full precision by setting `--mixed_precision fp32`.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to open issues or submit pull requests.
