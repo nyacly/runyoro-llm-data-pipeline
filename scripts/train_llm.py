@@ -129,6 +129,7 @@ def train_llm(
         model.resize_token_embeddings(len(tokenizer))
 
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
+    logging.info("Using DataCollatorForSeq2Seq for training.")
 
     training_output_dir = checkpoint_dir if checkpoint_dir else output_dir
 
@@ -170,6 +171,9 @@ def train_llm(
     }
 
     training_args = TrainingArguments(**filtered_kwargs)
+    logging.info(
+        f"Actual warmup_steps used by Trainer: {training_args.warmup_steps}"
+    )
 
     trainer = Trainer(
         model=model,
