@@ -16,17 +16,25 @@ import math
 
 
 class NanDetectionCallback(TrainerCallback):
-    """Detect and log NaN values in training metrics."""
+    """Detect NaN values in training metrics and stop training."""
 
     def on_log(self, args, state, control, logs=None, **kwargs):
         if not logs:
             return
+
         grad_norm = logs.get("grad_norm")
         loss = logs.get("loss")
+
+        detected = False
         if grad_norm is not None and isinstance(grad_norm, float) and math.isnan(grad_norm):
-            logging.warning("grad_norm became NaN. Training may be unstable.")
+            logging.warning("grad_norm became NaN. Stopping training.")
+            detected = True
         if loss is not None and isinstance(loss, float) and math.isnan(loss):
-            logging.warning("Loss became NaN. Check data and hyperparameters.")
+            logging.warning("Loss became NaN. Stopping training.")
+            detected = True
+
+        if detected:
+            control.should_training_stop = True
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
