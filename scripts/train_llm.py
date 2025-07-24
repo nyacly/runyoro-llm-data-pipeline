@@ -16,7 +16,30 @@ import math
 
 
 class NanDetectionCallback(TrainerCallback):
-    """Detect NaN values in training metrics and stop training."""
+    """Detect NaN values in training metrics and stop training.
+
+    If a NaN is encountered, the callback optionally checks the training
+    dataset for NaN values to help locate problematic examples.
+    """
+
+    def __init__(self, train_dataset=None):
+        super().__init__()
+        self.train_dataset = train_dataset
+
+    def _check_dataset_for_nan(self):
+        if self.train_dataset is None:
+            return None
+
+        import numpy as np
+
+        for idx, example in enumerate(self.train_dataset):
+            for col in ["input_ids", "labels"]:
+                if col not in example:
+                    continue
+                arr = np.asarray(example[col], dtype=float)
+                if np.isnan(arr).any():
+                    return idx, col
+        return None
 
     def on_log(self, args, state, control, logs=None, **kwargs):
         if not logs:
@@ -34,6 +57,12 @@ class NanDetectionCallback(TrainerCallback):
             detected = True
 
         if detected:
+            nan_loc = self._check_dataset_for_nan()
+            if nan_loc is not None:
+                idx, col = nan_loc
+                logging.warning(
+                    f"NaN detected in training data at index {idx} column '{col}'."
+                )
             control.should_training_stop = True
 
 logging.basicConfig(
@@ -241,7 +270,7 @@ def train_llm(
         eval_dataset=eval_dataset,
         data_collator=data_collator,
     )
-    trainer.add_callback(NanDetectionCallback())
+    trainer.add_callback(NanDetectionCallback(train_dataset=train_dataset))
 
     # --- Re-enabled Automated checkpoint resumption with robustness check ---
     latest_checkpoint = None
