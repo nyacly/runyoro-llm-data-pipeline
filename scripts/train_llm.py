@@ -8,7 +8,7 @@ from transformers import (
     AutoModelForSeq2SeqLM,
     TrainingArguments,
     Trainer,
-    DataCollatorForLanguageModeling,
+    DataCollatorForSeq2Seq,
 )
 from scripts.tokenizer_utils import train_tokenizer
 
@@ -120,7 +120,7 @@ def train_llm(
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
         model.resize_token_embeddings(len(tokenizer))
 
-    data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
+    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 
     training_output_dir = checkpoint_dir if checkpoint_dir else output_dir
 
