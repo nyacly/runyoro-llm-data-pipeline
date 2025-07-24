@@ -26,7 +26,7 @@ def train_llm(
     save_total_limit: int = 2,
     logging_steps: int = 10,
     learning_rate: float = 1e-5,
-    warmup_steps: int = 500,
+    warmup_steps: int = 5,
     weight_decay: float = 0.01,
     eval_steps: int = 500,
     gradient_accumulation_steps: int = 1,
@@ -52,6 +52,9 @@ def train_llm(
     Experiment with ``learning_rate`` and ``gradient_accumulation_steps`` if the
     model is still not converging well after more epochs or data.
     Mixed precision (``fp16``) is enabled by default for faster training on GPUs.
+
+    ``warmup_steps`` now defaults to 5 so the scheduler quickly reaches the base
+    learning rate when training on small datasets.
     """
     logging.info(f"Loading dataset from {processed_data_path}")
 
@@ -302,7 +305,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--warmup_steps",
         type=int,
-        default=500,
+        default=5,
         help="Warmup steps for the scheduler.",
     )
     parser.add_argument(
