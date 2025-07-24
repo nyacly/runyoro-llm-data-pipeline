@@ -81,15 +81,18 @@ def train_llm(
                 "In-memory loading not supported on this 'datasets' version; falling back to manual loading."
             )
             # Manually read the text files and create the Dataset in-memory.
+            # Each non-empty line is treated as a separate training example so
+            # we preserve the same semantics as ``load_dataset("text")``.
             import glob
 
             text_files = sorted(glob.glob(f"{processed_data_full_path}/*.txt"))
             texts = []
             for path in text_files:
                 with open(path, "r", encoding="utf-8") as f:
-                    content = f.read()
-                    if content.strip():
-                        texts.append(content)
+                    for line in f:
+                        line = line.strip()
+                        if line:
+                            texts.append(line)
 
             dataset = Dataset.from_dict({"text": texts})
         else:
