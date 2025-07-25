@@ -1,397 +1,134 @@
-# Runyoro/Rutooro LLM Data Processing and Training Pipeline
+# Runyoro/Rutooro LLM Data Pipeline
 
-This repository contains a comprehensive pipeline for processing diverse data sources and training a Large Language Model (LLM) for the Runyoro/Rutooro language. It handles data ingestion, preprocessing, and then facilitates the training and evaluation of an LLM.
+This repository contains a data processing and training pipeline for developing language models for Runyoro/Rutooro, an endangered Bantu language spoken in Uganda.
 
-## Project Structure
+## Issues Fixed
 
-- `raw_data/`: Directory for raw, unprocessed data.
-- `processed_data/`: Directory for processed and cleaned data, ready for LLM training.
-- `scripts/`: Contains Python scripts for different stages of the pipeline, including data processing, LLM training, and testing.
-- `models/`: Directory to store trained LLM models.
-- `configs/`: (Optional) Configuration files for training parameters.
-- `docs/`: Documentation related to the pipeline.
-- `requirements.txt`: Lists all Python dependencies.
+The following issues have been identified and resolved in this refactored version:
 
-## Getting Started
+### 1. Tokenizer Issues
+- **Problem**: The original code attempted to use fast tokenizers with mT5, which caused tiktoken-related errors
+- **Solution**: Modified `tokenizer_utils.py` to use the slow T5Tokenizer and skip custom tokenizer training for SentencePiece models
 
-This guide provides step-by-step instructions on how to set up and use this data processing and training pipeline on both a local MacBook Pro M4 and cloud environments like Google Colab or Hugging Face.
+### 2. Mixed Precision Configuration
+- **Problem**: Mixed precision was hardcoded to be disabled, preventing GPU acceleration
+- **Solution**: Implemented proper CUDA detection and mixed precision configuration based on hardware availability
 
-### Prerequisites
+### 3. Dependencies
+- **Problem**: Missing dependencies and conflicting package versions
+- **Solution**: Updated `requirements.txt` with proper dependencies including `sentencepiece` and `accelerate`
 
-Before you begin, ensure you have the following installed:
+### 4. Data Processing
+- **Problem**: Text iterator yielded entire files instead of individual lines
+- **Solution**: Modified `_text_iterator` to yield individual lines for better tokenization
 
-*   **Git**: For cloning the repository.
-*   **Python 3.8+**: The scripts are developed with Python 3.8 and above.
-*   **pip**: Python package installer (usually comes with Python).
+## Installation
 
-### 1. Local Setup (MacBook Pro M4)
-
-#### 1.1. Clone the Repository
-
-Open your terminal and clone the repository:
-
+1. Clone the repository:
 ```bash
 git clone https://github.com/nyacly/runyoro-llm-data-pipeline.git
 cd runyoro-llm-data-pipeline
 ```
 
-#### 1.2. Install Python Dependencies
-
-Install the required Python packages using pip:
-
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
-python3 setup_env.py
 ```
 
-#### 1.3. Run the Environment Setup Script
-
-After installing the dependencies, run the provided setup script to ensure the
-correct versions of PyTorch and Transformers are installed and to remove
-TensorFlow. This avoids CUDA library registration errors that can occur when
-TensorFlow is present.
-
+3. (Optional) Configure accelerate for distributed training:
 ```bash
-python3 setup_env.py
+accelerate config
 ```
 
-#### 1.4. Install System Dependencies
+## Usage
 
+### Data Processing
+Place your text data in the `processed_data/processed_text/` directory as `.txt` files.
 
-This pipeline relies on external tools for PDF processing (Poppler), OCR (Tesseract), and audio/video manipulation (FFmpeg). Install them using Homebrew:
-
+### Training
+Run the training script:
 ```bash
-brew install poppler tesseract ffmpeg
-```
-
-#### 1.5. Run the Data Processing Pipeline
-
-Place your raw data (PDFs, images, audio, video, text files, or a list of URLs for websites) into the `raw_data/` directory. The repository now includes a convenience script that will iterate over everything in this folder and process it automatically.
-
-To run the data processing pipeline on all files in `raw_data/`:
-
-```bash
-python3 scripts/process_raw_data.py
-```
-
-This script detects the file type (PDF, image, audio, video, or text) and calls the orchestrator accordingly. Processed outputs are saved in `processed_data/`, and metadata is written to `processed_data/processed_data_metadata.json`.
-After processing completes, a tokenizer is trained or updated using the text in `processed_data/processed_text/` and saved to `./tokenizer`. This tokenizer will be reused during LLM and ASR training. If you choose a byte‑level model such as **ByT5**, no training is performed—the tokenizer is simply loaded from the base model.
-
-#### Example: Processing an Audio/Text Pair Directory
-
-If you have a folder containing multiple audio files with matching transcript
-files, you can process the entire directory at once. **Each audio file must
-have a transcript with the exact same base filename**, for example
-`sample1.wav` with `sample1.txt`.  The directory path is supplied to the
-orchestrator with the source type `audio_text_pair` so every pair is processed
-together.
-
-```
-raw_data/test_audio_pairs/
-├── sample1.wav
-├── sample1.txt
-├── sample2.wav
-└── sample2.txt
-```
-
-To process this directory manually using the orchestrator:
-
-```python
-from scripts.orchestrator import process_data_source
-
-process_data_source(
-    "./raw_data/test_audio_pairs",
-    "audio_text_pair",
-    "./processed_data",
-    "./processed_data/processed_data_metadata.json",
-)
-```
-
-The orchestrator standardizes each audio file, cleans the accompanying text and
-runs forced alignment to generate a JSON file with timestamps. The resulting
-metadata entry for each pair includes a `pair_id` and the path to the alignment
-file alongside the processed audio segments and transcript.
-
-Each detected pair will appear in `processed_data_metadata.json` with a
-`pair_id` linking the processed audio segments to the corresponding transcript
-file. The pipeline now performs **forced alignment** on each pair using the
-`aeneas` library when available. This generates a JSON file with start/end
-timestamps for every line of the transcript, making the data immediately usable
-for STT or TTS training.
-
-`scripts/test_pipeline.py` remains as a simple example showing how to call `process_data_source` directly if you need more control or want to integrate specific sources (like websites) manually.
-
-#### Running Training Locally vs. Google Colab
-
-Data processing generally runs well on a MacBook Pro, but the first stage of
-LLM training (`scripts/train_llm.py`) can easily exhaust laptop memory.  If you
-see crashes during training, switch to Google Colab or another GPU-enabled
-environment.  This repository now provides Colab notebooks under
-`notebooks/` that automate the heavy training step.  After training finishes you
-can copy the `models/` directory back to your MacBook and continue with local
-testing or further fine‑tuning.
-When running in Colab, make sure to execute `python3 setup_env.py` after cloning
-the repository. This removes TensorFlow and reinstalls PyTorch/Transformers so
-the GPU initializes correctly before training.
-
-### 2. LLM Training
-
-Once your data has been processed and is available in `processed_data/processed_text/`, you can proceed with training your LLM.
-
-#### 2.1. Run the Training Script
-
-The `scripts/train_llm.py` script is used to train the LLM. You can specify various parameters such as the path to your processed text data, the base model to use (e.g., `gpt2`), and the output directory for the trained model.
-
-```bash
-python3 scripts/train_llm.py \
-    --processed_data_path ./processed_data/processed_text \
-    --model_name gpt2 \
+python3 -m scripts.train_llm \
+    --processed_data_path processed_data/processed_text \
+    --model_name google/mt5-small \
     --output_dir ./models/runyoro_llm_model \
     --tokenizer_dir ./tokenizer \
-    --checkpoint_dir /content/runyoro_checkpoints \
+    --checkpoint_dir /tmp/runyoro_checkpoints \
     --mixed_precision fp16 \
     --num_train_epochs 5 \
-    --use_wandb
+    --per_device_train_batch_size 4
 ```
 
-Increasing `--num_train_epochs` lets the model train longer. When `--use_wandb`
-is supplied, training and evaluation losses are logged to your Weights & Biases
-dashboard. Watch the `eval_loss` curve—if it starts to rise while the training
-loss keeps dropping, stop the run to avoid overfitting. If training becomes
-unstable (for example the loss turns `nan`), lower `--learning_rate` and enable
-gradient clipping with `--max_grad_norm`.
+### Jupyter Notebooks
+The training can also be run using the provided Jupyter notebooks:
+- `01_Process_Data.ipynb` - Data preprocessing
+- `02_Train_LLM_Stage1.ipynb` - Model training
+- `03_Test_LLM.ipynb` - Model testing
 
-**Key Parameters:**
+## Key Features
 
-*   `--processed_data_path`: Path to the directory containing your processed `.txt` files (e.g., `./processed_data/processed_text`). Each `.txt` file will be treated as a document for training.
-*   `--model_name`: The name of a pre-trained model from Hugging Face Transformers to use as a base. For initial experimentation, `gpt2` is a good starting point. For low-resource languages, you might consider smaller models or multilingual models that can be further fine-tuned.
-*   `--output_dir`: The directory where the trained model and tokenizer will be saved.
-*   `--tokenizer_dir`: Directory where the tokenizer will be stored. If it does not exist, it will be created and trained from the processed text.
-*   `--vocab_size`: Vocabulary size to use when training the tokenizer.
-*   `--checkpoint_dir`: Optional directory for intermediate checkpoints. Using a location outside Google Drive prevents the trash from filling up during training.
-*   `--save_total_limit`: Number of checkpoints to keep (older ones are deleted).
-*   `--cleanup_checkpoints`: If set, the `checkpoint_dir` will be removed after the final model is copied to `output_dir`.
-*   `--mixed_precision`: Set to `fp16` or `bf16` to enable faster mixed‑precision training on GPU (recommended on Colab Pro+).
-*   `--warmup_steps`: Number of warm-up steps for the learning rate scheduler. Defaults to `5` so small datasets reach the base learning rate quickly.
-*   `--max_grad_norm`: Maximum gradient norm. Lowering this can help prevent exploding gradients during training.
+- **Robust Error Handling**: NaN detection and automatic training termination
+- **Checkpoint Management**: Automatic checkpoint saving and resumption
+- **Mixed Precision Training**: Automatic FP16/BF16 support based on hardware
+- **Data Validation**: Automatic filtering of empty or invalid examples
+- **Flexible Configuration**: Extensive command-line arguments for customization
 
-**Expected Results during Training:**
+## Configuration Options
 
-During training, you will see logs indicating the progress, including:
+Key training parameters:
+- `--num_train_epochs`: Number of training epochs (default: 5)
+- `--per_device_train_batch_size`: Batch size per device (default: 8)
+- `--learning_rate`: Learning rate (default: 1e-5)
+- `--mixed_precision`: Mixed precision mode (fp16/bf16/none)
+- `--gradient_accumulation_steps`: Gradient accumulation steps
+- `--max_grad_norm`: Gradient clipping threshold
 
-*   **Loss values**: These should generally decrease over time, indicating that the model is learning.
-*   **Evaluation metrics**: If `eval_steps` is set (within `scripts/train_llm.py`), the model will be evaluated periodically on a validation set, showing metrics like validation loss.
-*   **Model checkpoints**: Intermediate models are written to `checkpoint_dir` (or `output_dir` if not set) at the interval defined by `save_steps`. Keeping `checkpoint_dir` on local storage avoids filling Google Drive's trash.
+## Hardware Requirements
 
-Upon successful completion, a `final_model` directory will be created inside your specified `output_dir` (e.g., `./models/runyoro_llm_model/final_model`), containing the trained model weights and tokenizer files.
+- **Minimum**: 8GB RAM, CPU training supported
+- **Recommended**: 16GB+ RAM, NVIDIA GPU with 8GB+ VRAM for mixed precision training
+- **Optimal**: Multi-GPU setup with 16GB+ VRAM per GPU
 
-### 3. Model Testing and Evaluation
+## Troubleshooting
 
-#### 3.1. Run the Testing Script
+### Common Issues
 
-The `scripts/test_llm.py` script allows you to test your trained LLM by generating text based on a given prompt.
+1. **CUDA Out of Memory**:
+   - Reduce `per_device_train_batch_size`
+   - Increase `gradient_accumulation_steps`
+   - Use `fp16` mixed precision
 
-```bash
-python3 scripts/test_llm.py \
-    --model_path ./models/runyoro_llm_model/final_model \
-    --prompt "Ekiro kyona" \
-    --max_new_tokens 100 \
-    --temperature 0.8 \
-    --top_k 50 \
-    --top_p 0.95 \
-    --no_repeat_ngram_size 3
-```
+2. **Tokenizer Errors**:
+   - Ensure `sentencepiece` is installed
+   - Use the slow tokenizer (T5Tokenizer) instead of fast tokenizer
 
-**Key Parameters:**
+3. **Training Instability**:
+   - Check for NaN values in data
+   - Reduce learning rate
+   - Adjust `max_grad_norm` for gradient clipping
 
-*   `--model_path`: Path to the directory containing your trained model and tokenizer (the `final_model` directory from training).
-*   `--prompt`: An optional initial text prompt in Runyoro/Rutooro for the model to continue. If no prompt is provided, the model will generate text from scratch.
-*   `--max_new_tokens`: Maximum number of tokens to generate.
-*   `--temperature`: Controls randomness; values around 0.7-0.9 generally work well.
-*   `--top_k`: Sample from the `k` most probable tokens.
-*   `--top_p`: Nucleus sampling threshold.
-*   `--no_repeat_ngram_size`: Prevent repetition of ngrams of this length.
-*   `--num_beams`: Use beam search instead of sampling when set (e.g. `5`) for more coherent text.
+### Performance Optimization
 
-**Expected Results from Testing:**
-
-The script will output the generated text sequences. The quality of the generated text will depend on:
-
-*   **Amount and quality of training data**: More diverse and relevant Runyoro/Rutooro text data will lead to better generation.
-*   **Training epochs**: Sufficient training time is crucial.
-*   **Model size and architecture**: Larger models generally capture more complex language patterns.
-
-Initially, with a small dataset and a base model like GPT-2, the generated text might not be perfectly coherent or grammatically correct in Runyoro/Rutooro. However, you should observe that the model starts to generate sequences that resemble the Runyoro/Rutooro language in terms of character patterns and some common words, indicating that it has learned from your data.
-
-### 3.2. Audio/Video Transcription
-
-Once an initial model is available you can automatically transcribe recordings to grow the dataset. The helper script `scripts/transcribe_audio_whisper.py` relies on the Faster‑Whisper implementation and works well on Colab GPUs.
-
-```bash
-python3 scripts/transcribe_audio_whisper.py \
-    --input_path path/to/audio_or_video.wav \
-    --output_path ./transcripts/output.txt \
-    --model_size base
-```
-
-Add the generated transcripts back into `raw_data/` or `processed_data/processed_text/` before the next training stage.
-
-### 4. Cloud Setup (Google Colab / Hugging Face Spaces)
-
-For cloud environments, the setup process is similar but often simpler due to pre-installed dependencies or easier installation methods.
-
-#### 4.1. Google Colab
-
-1.  **Open a New Colab Notebook**: Go to [Google Colab](https://colab.research.google.com/) and create a new notebook.
-2.  **Clone the Repository**: In a code cell, run:
-    ```python
-    !git clone https://github.com/nyacly/runyoro-llm-data-pipeline.git
-    %cd runyoro-llm-data-pipeline
-    ```
-3.  **Install Python Dependencies**: In a new code cell:
-    ```python
-    !pip install -r requirements.txt
-    !python3 setup_env.py
-
-4.  **Run the Environment Setup Script**: This script removes TensorFlow and
-    reinstalls PyTorch and Transformers to prevent CUDA library registration
-    errors. Run it before training:
-    ```python
-    !python3 setup_env.py
-    ```
-5.  **Install System Dependencies**: Colab usually has `ffmpeg` pre-installed. For `poppler` and `tesseract`, you might need to install them via `apt-get`:
-    ```python
-    !sudo apt-get update
-    !sudo apt-get install -y poppler-utils tesseract-ocr
-    ```
-6.  **Upload Data**: If your raw data is in Google Drive, mount your Drive and copy/symlink the data to `raw_data/`:
-    ```python
-    from google.colab import drive
-    drive.mount("/content/drive")
-    !cp -r "/content/drive/MyDrive/path/to/your/raw_data/*" raw_data/
-    ```
-    Alternatively, upload directly to the `raw_data/` directory.
-7.  **Use the Provided Notebooks**: Instead of manually running each command,
-    open the notebooks in the `notebooks/` directory (`01_Process_Data.ipynb`,
-    `02_Train_LLM_Stage1.ipynb`, and `03_Test_LLM.ipynb`).  These notebooks
-    contain the commands needed for processing, training, and testing on Colab.
-
-#### 4.2. Hugging Face Spaces
-
-1.  **Create a New Space**: Go to [Hugging Face Spaces](https://huggingface.co/spaces) and create a new Space. Choose a Docker-based template or a custom template.
-2.  **Clone the Repository**: Link your Space to this GitHub repository.
-3.  **Define Dependencies**: Ensure `requirements.txt` is in your Space, and if using a Dockerfile, include commands to install system dependencies (e.g., `apt-get install ...`).
-4.  **Data Upload**: Upload your raw data to the Space's data directory or configure a persistent storage solution.
-5.  **Run the Pipeline**: Configure your Space's `app.py` or a custom script to run the processing, training, and testing scripts. For long-running training jobs, consider using Hugging Face's training APIs or a dedicated training infrastructure.
-
-## Data Input and Expected Output
-
-### Input Data (`raw_data/`)
-
-Place your raw, unprocessed data files into the `raw_data/` directory. The pipeline supports the following data types:
-
-*   **PDFs (`.pdf`)**: Documents containing text and/or images.
-*   **Images (`.png`, `.jpg`, `.jpeg`, etc.)**: Image files from which text can be extracted using OCR.
-*   **Audio Files (`.mp3`, `.wav`, `.flac`, etc.)**: Audio recordings for transcription or further audio processing.
-*   **Video Files (`.mp4`, `.avi`, `.mov`, etc.)**: Video files from which audio tracks can be extracted.
-*   **Text Files (`.txt`)**: Plain text documents.
-*   **Audio-Text Pairs (directory)**: A directory containing one or more audio files and matching `.txt` transcripts that share the same base filename (e.g. `sample.wav` and `sample.txt`).
-*   **Website URLs**: You can provide a list of URLs (static or dynamic) within a text file, or directly pass them to the `process_data_source` function.
-
-### Expected Output (`processed_data/`)
-
-After running the data processing pipeline, the `processed_data/` directory will contain the cleaned and structured data, organized into subdirectories based on the processed data type:
-
-*   `processed_data/processed_text/`: Contains `.txt` files with extracted and cleaned text from PDFs, images, text files, and websites. Each file will correspond to a processed text source.
-*   `processed_data/processed_audio/`: Contains `.wav` files of standardized audio segments extracted from raw audio files.
-*   `processed_data/processed_audio_from_video/`: Contains `.wav` files of standardized audio segments extracted from video files.
-*   `processed_data/audio_text_pair_template.txt`: Describes how processed audio/text pairs are structured.
-*   `processed_data/processed_data_metadata.json`: A JSON file that stores metadata for all processed items, including their original source, hash (for deduplication), processed path, data type, and timestamp. This file is crucial for tracking processed data and preventing duplicates. When processing audio-text pair folders, each entry includes a `pair_id` linking an audio file to its transcript.
-
-## Using Processed Data for LLM Training
-
-The data generated in the `processed_data/` directory is now in a format suitable for various stages of LLM training:
-
-1.  **Text Data (`processed_data/processed_text/`)**: These `.txt` files contain clean, preprocessed text. They can be directly used for:
-    *   **Pre-training**: For training a new LLM from scratch on the Runyoro/Rutooro language, or for continued pre-training of an existing multilingual LLM to adapt it to Runyoro/Rutooro.
-    *   **Fine-tuning**: For task-specific fine-tuning (e.g., text generation, summarization, translation) once a base LLM is available.
-    *   **Corpus Building**: To build a comprehensive text corpus for language modeling research.
-
-2.  **Audio Data (`processed_data/processed_audio/` and `processed_data/processed_audio_from_video/`)**: These `.wav` files represent clean audio segments. They are primarily used for:
-    *   **Speech-to-Text (STT) Model Training**: To train or fine-tune an STT model specifically for Runyoro/Rutooro. The audio segments can be paired with their corresponding text transcriptions (which you would generate separately, perhaps using a small initial STT model or manual transcription, and then integrate into the metadata).
-    *   **Voice Activity Detection (VAD)**: The standardized audio can be used to train VAD models to identify speech segments more accurately.
-
-3.  **Metadata (`processed_data/processed_data_metadata.json`)**: This file serves as a central registry for your dataset. It can be parsed to:
-    *   **Manage Dataset Versions**: Track which sources have been processed.
-    *   **Create Training Manifests**: Generate manifest files (e.g., CSV, JSONL) that link audio files to their transcriptions, or text files to their source metadata, which are commonly required by LLM and STT training frameworks (e.g., Hugging Face `datasets` library, PyTorch Lightning DataModules).
-    *   **Filter and Select Data**: Easily filter data based on source type, processing status, or other metadata fields for specific training tasks.
-
-**Workflow for LLM Training:**
-
-*   **Initial STT Model (MVP)**: Start with a small subset of transcribed audio (manual or semi-automated) to train a basic STT model. This model can then be used to bootstrap transcription of larger audio datasets.
-*   **Iterative Data Curation**: As more audio is transcribed and text is extracted, continuously feed this data back into the pipeline. The deduplication feature ensures efficient processing of new data.
-*   **LLM Adaptation**: Use the growing Runyoro/Rutooro text corpus to pre-train or fine-tune an LLM. Consider using transfer learning from a large multilingual model if starting from scratch is too resource-intensive.
-
-## Pipeline Components
-
-Refer to the individual Python files in the `scripts/` directory for detailed information on each component:
-
-*   `scripts/core_components.py`: Contains fundamental functions for text extraction, audio/video processing, and initial data cleaning.
-*   `scripts/text_processing.py`: Handles text-specific data extraction and preprocessing.
-*   `scripts/audio_processing.py`: Manages audio standardization and segmentation.
-*   `scripts/video_processing.py`: Extracts and processes audio from video sources.
-*   `scripts/orchestrator.py`: The central script for managing the data flow, including duplicate detection and metadata management.
-*   `scripts/test_pipeline.py`: An example script to demonstrate the data processing pipeline's functionality.
-*   `scripts/train_llm.py`: The main script for training the LLM.
-*   `scripts/test_llm.py`: Script for testing the trained LLM by generating text.
-*   `scripts/transcribe_audio_whisper.py`: Utility script using Faster-Whisper to generate transcripts from audio or video files.
-
-### Troubleshooting NaN Gradients
-
-If training logs show `grad_norm: nan` or losses become `nan`, the model is
-experiencing numerical instability. The steps below summarize common fixes:
-
-1. **Check mixed precision** – disable `fp16` or switch to `bf16` by setting
-   `--mixed_precision bf16` (or remove the flag entirely) if `fp16` causes
-   instability.
-
-2. **Lower the learning rate** – values around `1e-5` help keep gradients
-   bounded when fine-tuning large models.
-   Make sure the learning rate is never set to `0`. If a scheduler or warmup
-   phase results in a zero learning rate, reduce the number of warmup steps so
-   the base value is reached quickly.
-
-3. **Use gradient clipping** – pass `--max_grad_norm 1.0` (or similar) to keep
-   gradients from exploding.
-
-4. **Verify your data** – ensure tokenized inputs contain no NaNs. A quick check
-   in Python looks like:
-
-   ```python
-   import numpy as np
-   for batch in train_dataset:
-       if np.isnan(batch["input_ids"]).any():
-           raise ValueError("NaN found in input_ids")
-   ```
-
-5. **Ensure you have enough data** – training on an empty or tiny dataset can
-   produce zero or NaN gradients. Check that `processed_data/processed_text/`
-   contains non-empty `.txt` files before starting training.
-
-6. **Adjust training settings** – try smaller batch sizes and monitor logs (for
-   example with TensorBoard) for early signs of divergence.
-
-7. **Enable debugging** – PyTorch's anomaly detection can reveal where NaNs are
-   produced. Wrap your training loop with:
-
-   ```python
-   import torch
-   with torch.autograd.detect_anomaly():
-       trainer.train()
-   ```
+- Use mixed precision training (`--mixed_precision fp16`)
+- Enable gradient checkpointing for memory efficiency
+- Use multiple GPUs with `accelerate launch`
+- Optimize batch size and gradient accumulation
 
 ## Contributing
 
-Contributions are welcome! Please feel free to open issues or submit pull requests.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- The Runyoro/Rutooro language community
+- Hugging Face Transformers library
+- Google's mT5 model
 
