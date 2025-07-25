@@ -152,8 +152,34 @@ def train_llm(
         data_files=data_files,
         cache_dir=cache_dir or "/tmp/hf_datasets_cache",
     )
-    # filter empty lines
+    # filter empty or very short lines
     raw = raw.filter(lambda ex: bool(ex["text"].strip()))
+    raw = raw.filter(lambda ex: len(ex["text"]) > 10)
+
+    logging.info("Training/Updating tokenizer...")
+    tokenizer = train_tokenizer(
+        processed_data_path, tokenizer_dir, model_name, vocab_size
+    )
+    if tokenizer.pad_token is None:
+        tokenizer.add_special_tokens({"pad_token": "[PAD]"})
+
+    def tokenize_fn(ex):
+        tokens = tokenizer(
+            ex["text"],
+            truncation=True,
+            max_length=block_size,
+            padding="max_length",
+        )
+        tokens["labels"] = tokens["input_ids"].copy()
+        return tokens
+
+    logging.info("Tokenizing dataset...")
+    raw = raw.map(
+        tokenize_fn,
+        batched=True,
+        remove_columns=["text"],
+        num_proc=4,
+    )
 
     dataset = raw["train"]
     logging.info(f"Dataset size: {len(dataset)} examples")
@@ -177,28 +203,7 @@ def train_llm(
     # Ensure we have a validation split
     dataset = dataset.train_test_split(test_size=0.1)
 
-    # Filter out empty or very short examples
-    dataset = dataset.filter(lambda example: len(example["text"]) > 10)
-
-    logging.info("Training/Updating tokenizer...")
-    tokenizer = train_tokenizer(
-        processed_data_path, tokenizer_dir, model_name, vocab_size
-    )
-    if tokenizer.pad_token is None:
-        tokenizer.add_special_tokens({"pad_token": "[PAD]"})
-
-    def tokenize_function(examples):
-        tokens = tokenizer(examples["text"], truncation=True, max_length=block_size)
-        tokens["labels"] = tokens["input_ids"].copy()
-        return tokens
-
-    logging.info("Tokenizing dataset...")
-    tokenized_datasets = dataset.map(
-        tokenize_function,
-        batched=True,
-        num_proc=os.cpu_count(),
-        remove_columns=["text"],
-    )
+    tokenized_datasets = dataset
 
     # Optional sanity check for NaNs in the tokenized dataset
     import numpy as np
