@@ -22,9 +22,10 @@ class NanDetectionCallback(TrainerCallback):
     dataset for NaN values to help locate problematic examples.
     """
 
-    def __init__(self, train_dataset=None):
+    def __init__(self, train_dataset=None, tokenizer=None):
         super().__init__()
         self.train_dataset = train_dataset
+        self.tokenizer = tokenizer
 
     def _check_dataset_for_nan(self):
         if self.train_dataset is None:
@@ -63,6 +64,12 @@ class NanDetectionCallback(TrainerCallback):
                 logging.warning(
                     f"NaN detected in training data at index {idx} column '{col}'."
                 )
+                if self.tokenizer is not None:
+                    problematic_example = self.train_dataset[idx]
+                    decoded_text = self.tokenizer.decode(problematic_example['input_ids'])
+                    with open("problematic_examples.txt", "a") as f:
+                        f.write(f"Index: {idx}, Column: {col}\\n")
+                        f.write(f"Text: {decoded_text}\\n\\n")
             control.should_training_stop = True
 
 logging.basicConfig(
@@ -169,6 +176,9 @@ def train_llm(
 
     # Ensure we have a validation split
     dataset = dataset.train_test_split(test_size=0.1)
+
+    # Filter out empty or very short examples
+    dataset = dataset.filter(lambda example: len(example['text']) > 10)
 
     logging.info("Training/Updating tokenizer...")
     tokenizer = train_tokenizer(
@@ -281,7 +291,7 @@ def train_llm(
         eval_dataset=eval_dataset,
         data_collator=data_collator,
     )
-    trainer.add_callback(NanDetectionCallback(train_dataset=train_dataset))
+    trainer.add_callback(NanDetectionCallback(train_dataset=train_dataset, tokenizer=tokenizer))
 
     # --- Re-enabled Automated checkpoint resumption with robustness check ---
     latest_checkpoint = None
