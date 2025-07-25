@@ -57,7 +57,8 @@ Replace your current training command with:
     --per_device_train_batch_size 1 \
     --learning_rate 5e-5 \
     --warmup_steps 100 \
-    --mixed_precision no
+    --mixed_precision no \
+    --load_in_8bit
 ```
 
 ## Key Changes Made

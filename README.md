@@ -54,7 +54,8 @@ python3 -m scripts.train_llm \
     --output_dir ./models/runyoro_llm_model \
     --tokenizer_dir ./tokenizer \
     --checkpoint_dir /tmp/runyoro_checkpoints \
-    --mixed_precision fp16 \
+    --mixed_precision no \
+    --load_in_8bit \
     --num_train_epochs 5 \
     --per_device_train_batch_size 4
 ```
@@ -78,10 +79,11 @@ The training can also be run using the provided Jupyter notebooks:
 Key training parameters:
 - `--num_train_epochs`: Number of training epochs (default: 5)
 - `--per_device_train_batch_size`: Batch size per device (default: 8)
-- `--learning_rate`: Learning rate (default: 1e-5)
-- `--mixed_precision`: Mixed precision mode (fp16/bf16/none)
-- `--gradient_accumulation_steps`: Gradient accumulation steps
-- `--max_grad_norm`: Gradient clipping threshold
+  - `--learning_rate`: Learning rate (default: 1e-5)
+  - `--mixed_precision`: Mixed precision mode (no/fp16/bf16)
+  - `--load_in_8bit`: Enable 8-bit model loading to reduce GPU memory usage
+  - `--gradient_accumulation_steps`: Gradient accumulation steps
+  - `--max_grad_norm`: Gradient clipping threshold
 
 ## Hardware Requirements
 
@@ -107,9 +109,10 @@ Key training parameters:
    - Reduce learning rate
    - Adjust `max_grad_norm` for gradient clipping
 
-### Performance Optimization
+-### Performance Optimization
 
-- Use mixed precision training (`--mixed_precision fp16`)
+- Use mixed precision training (`--mixed_precision fp16`) when training is
+  stable and a compatible GPU is available
 - Enable gradient checkpointing for memory efficiency
 - Use multiple GPUs with `accelerate launch`
 - Optimize batch size and gradient accumulation
