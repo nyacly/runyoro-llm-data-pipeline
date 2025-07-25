@@ -234,7 +234,7 @@ def train_llm(
     logging.info(f"Loading model: {model_name}")
     # Load model with 8-bit quantization to reduce memory usage
     model = AutoModelForSeq2SeqLM.from_pretrained(
-        model_name, ignore_mismatched_sizes=True, load_in_8bit=True
+        model_name, ignore_mismatched_sizes=True
     )
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
         model.resize_token_embeddings(len(tokenizer))
