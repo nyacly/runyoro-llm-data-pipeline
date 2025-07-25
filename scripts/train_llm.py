@@ -4,7 +4,7 @@ import logging
 import shutil
 from datasets import Dataset, load_dataset
 from transformers import (
-    AutoTokenizer,
+    T5TokenizerFast,
     AutoModelForSeq2SeqLM,
     TrainingArguments,
     Trainer,
@@ -92,6 +92,7 @@ def train_llm(
     cleanup_checkpoints: bool = False,
     mixed_precision: str | None = "fp16",
     use_wandb: bool = False,
+    no_mixed_precision: bool = False,
 ):
     """Train or resume a sequence-to-sequence language model.
 
@@ -224,10 +225,20 @@ def train_llm(
 
     fp16 = False
     bf16 = False
-    if mixed_precision == "fp16":
-        fp16 = True
-    elif mixed_precision == "bf16":
-        bf16 = True
+    if not no_mixed_precision:
+        if mixed_precision == "fp16":
+            fp16 = True
+        elif mixed_precision == "bf16":
+            bf16 = True
+
+    # Adjust save and eval steps based on dataset size
+    num_examples = len(train_dataset)
+    if num_examples < 10000:
+        save_steps = min(save_steps, 500)
+        eval_steps = min(eval_steps, 250)
+    else:
+        save_steps = min(save_steps, 1000)
+        eval_steps = min(eval_steps, 500)
 
     # Build arguments for TrainingArguments but ensure compatibility with older
     # Transformers versions that may not support some parameters like
@@ -459,6 +470,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Log metrics to Weights & Biases during training.",
     )
+    parser.add_argument(
+        "--no_mixed_precision",
+        action="store_true",
+        help="Disable mixed precision training (e.g., if encountering NaN gradients).",
+    )
 
     args = parser.parse_args()
     train_llm(
@@ -479,4 +495,5 @@ if __name__ == "__main__":
         cleanup_checkpoints=args.cleanup_checkpoints,
         mixed_precision=args.mixed_precision,
         use_wandb=args.use_wandb,
+        no_mixed_precision=args.no_mixed_precision,
     )
