@@ -1,0 +1,27 @@
+numpy<2.0
+pdf2image
+datasets
+transformers
+torch
+# Additional libraries used throughout the processing scripts
+pytesseract
+PyPDF2
+pillow
+pydub
+requests
+beautifulsoup4
+
+# Web scraping and automation
+selenium==4.34.2
+webdriver-manager==4.0.2
+
+# Audio transcription
+faster-whisper
+
+# System level utilities required for OCR, PDF and media processing
+# The following are system-level packages typically installed via apt or brew
+# They are listed here for completeness but will not be installed by pip
+# chromium-chromedriver
+# poppler-utils
+# tesseract-ocr
+# ffmpeg
