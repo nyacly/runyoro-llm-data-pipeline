@@ -50,7 +50,11 @@ class NanDetectionCallback(TrainerCallback):
         loss = logs.get("loss")
 
         detected = False
-        if grad_norm is not None and isinstance(grad_norm, float) and math.isnan(grad_norm):
+        if (
+            grad_norm is not None
+            and isinstance(grad_norm, float)
+            and math.isnan(grad_norm)
+        ):
             logging.warning("grad_norm became NaN. Stopping training.")
             detected = True
         if loss is not None and isinstance(loss, float) and math.isnan(loss):
@@ -62,15 +66,18 @@ class NanDetectionCallback(TrainerCallback):
             if nan_loc is not None:
                 idx, col = nan_loc
                 logging.warning(
-                    f"NaN detected in training data at index {idx} column \'{col}\'."
+                    f"NaN detected in training data at index {idx} column '{col}'."
                 )
                 if self.tokenizer is not None:
                     problematic_example = self.train_dataset[idx]
-                    decoded_text = self.tokenizer.decode(problematic_example["input_ids"])
+                    decoded_text = self.tokenizer.decode(
+                        problematic_example["input_ids"]
+                    )
                     with open("problematic_examples.txt", "a") as f:
                         f.write(f"Index: {idx}, Column: {col}\\n")
                         f.write(f"Text: {decoded_text}\\n\\n")
             control.should_training_stop = True
+
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -97,7 +104,8 @@ def train_llm(
     cache_dir: str | None = None,
     checkpoint_dir: str | None = None,
     cleanup_checkpoints: bool = False,
-    mixed_precision: str | None = None,
+    mixed_precision: str | None = "no",
+    load_in_8bit: bool = False,
     use_wandb: bool = False,
 ):
     """Train or resume a sequence-to-sequence language model.
@@ -115,7 +123,8 @@ def train_llm(
 
     Experiment with ``learning_rate`` and ``gradient_accumulation_steps`` if the
     model is still not converging well after more epochs or data.
-    Mixed precision (``fp16``) is enabled by default for faster training on GPUs.
+    Mixed precision can be enabled with ``mixed_precision='fp16'`` when running
+    on a compatible GPU, but is disabled by default for stability.
 
     ``warmup_steps`` now defaults to 5 so the scheduler quickly reaches the base
     learning rate when training on small datasets.
@@ -145,7 +154,7 @@ def train_llm(
     except NotImplementedError as e:
         if "LocalFileSystem" in str(e):
             logging.warning(
-                "In-memory loading not supported on this \'datasets\' version; falling back to manual loading."
+                "In-memory loading not supported on this 'datasets' version; falling back to manual loading."
             )
             # Manually read the text files and create the Dataset in-memory.
             # Each non-empty line is treated as a separate training example so
@@ -180,9 +189,7 @@ def train_llm(
         )
 
     if learning_rate <= 0:
-        raise ValueError(
-            "learning_rate must be greater than 0."
-        )
+        raise ValueError("learning_rate must be greater than 0.")
 
     # Ensure we have a validation split
     dataset = dataset.train_test_split(test_size=0.1)
@@ -212,6 +219,7 @@ def train_llm(
 
     # Optional sanity check for NaNs in the tokenized dataset
     import numpy as np
+
     for split_name in ["train", "test"]:
         ds = tokenized_datasets[split_name]
         for col in ["input_ids", "labels"]:
@@ -223,18 +231,21 @@ def train_llm(
             flat_tokens = [t for seq in ds[col] for t in seq]
             arr = np.asarray(flat_tokens, dtype=float)
             if np.isnan(arr).any():
-                raise ValueError(
-                    f"NaN detected in {split_name} dataset column {col}"
-                )
+                raise ValueError(f"NaN detected in {split_name} dataset column {col}")
 
     # Datasets were already split earlier
     train_dataset = tokenized_datasets["train"]
     eval_dataset = tokenized_datasets["test"]
 
+    import torch
+
     logging.info(f"Loading model: {model_name}")
-    # Load model with 8-bit quantization to reduce memory usage
+    quant_args = {}
+    if load_in_8bit and torch.cuda.is_available():
+        quant_args = {"load_in_8bit": True, "device_map": "auto"}
+        logging.info("Using 8-bit quantization for model loading.")
     model = AutoModelForSeq2SeqLM.from_pretrained(
-        model_name, ignore_mismatched_sizes=True
+        model_name, ignore_mismatched_sizes=True, **quant_args
     )
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
         model.resize_token_embeddings(len(tokenizer))
@@ -300,7 +311,9 @@ def train_llm(
         eval_dataset=eval_dataset,
         data_collator=data_collator,
     )
-    trainer.add_callback(NanDetectionCallback(train_dataset=train_dataset, tokenizer=tokenizer))
+    trainer.add_callback(
+        NanDetectionCallback(train_dataset=train_dataset, tokenizer=tokenizer)
+    )
 
     # --- Re-enabled Automated checkpoint resumption with robustness check ---
     latest_checkpoint = None
@@ -330,7 +343,7 @@ def train_llm(
                 )
             else:
                 logging.warning(
-                    f"Found checkpoint folder \'{candidate_checkpoint}\' but it appears incomplete (missing model files). Starting fresh."
+                    f"Found checkpoint folder '{candidate_checkpoint}' but it appears incomplete (missing model files). Starting fresh."
                 )
                 # If incomplete, treat as if no valid checkpoint was found
                 latest_checkpoint = None
@@ -501,9 +514,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "--mixed_precision",
         type=str,
-        default="fp16",
+        default="no",
         choices=["no", "fp16", "bf16"],
         help="Whether to use mixed precision training (no, fp16, bf16).",
+    )
+    parser.add_argument(
+        "--load_in_8bit",
+        action="store_true",
+        help="Load model using 8-bit quantization if CUDA is available.",
     )
     parser.add_argument(
         "--use_wandb",
@@ -534,7 +552,6 @@ if __name__ == "__main__":
         checkpoint_dir=args.checkpoint_dir,
         cleanup_checkpoints=args.cleanup_checkpoints,
         mixed_precision=args.mixed_precision,
+        load_in_8bit=args.load_in_8bit,
         use_wandb=args.use_wandb,
     )
-
-
