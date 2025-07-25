@@ -357,6 +357,9 @@ experiencing numerical instability. The steps below summarize common fixes:
 
 2. **Lower the learning rate** – values around `1e-5` help keep gradients
    bounded when fine-tuning large models.
+   Make sure the learning rate is never set to `0`. If a scheduler or warmup
+   phase results in a zero learning rate, reduce the number of warmup steps so
+   the base value is reached quickly.
 
 3. **Use gradient clipping** – pass `--max_grad_norm 1.0` (or similar) to keep
    gradients from exploding.
@@ -377,6 +380,15 @@ experiencing numerical instability. The steps below summarize common fixes:
 
 6. **Adjust training settings** – try smaller batch sizes and monitor logs (for
    example with TensorBoard) for early signs of divergence.
+
+7. **Enable debugging** – PyTorch's anomaly detection can reveal where NaNs are
+   produced. Wrap your training loop with:
+
+   ```python
+   import torch
+   with torch.autograd.detect_anomaly():
+       trainer.train()
+   ```
 
 ## Contributing
 
