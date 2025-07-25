@@ -166,6 +166,17 @@ def train_llm(
             " training."
         )
 
+    if len(dataset) < 10:
+        raise ValueError(
+            "Training dataset must contain at least 10 examples to avoid "
+            "unstable gradients. Add more data to processed_data/processed_text."
+        )
+
+    if learning_rate <= 0:
+        raise ValueError(
+            "learning_rate must be greater than 0."
+        )
+
     # Ensure we have a validation split
     dataset = dataset.train_test_split(test_size=0.1)
 
@@ -224,10 +235,17 @@ def train_llm(
 
     fp16 = False
     bf16 = False
-    if mixed_precision == "fp16":
-        fp16 = True
-    elif mixed_precision == "bf16":
-        bf16 = True
+    if mixed_precision in {"fp16", "bf16"}:
+        import torch
+        if not torch.cuda.is_available():
+            logging.warning(
+                "CUDA not available; disabling mixed precision to avoid NaNs."
+            )
+            mixed_precision = None
+        elif mixed_precision == "fp16":
+            fp16 = True
+        elif mixed_precision == "bf16":
+            bf16 = True
 
     # Build arguments for TrainingArguments but ensure compatibility with older
     # Transformers versions that may not support some parameters like
