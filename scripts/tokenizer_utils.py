@@ -2,9 +2,7 @@ import os
 import logging
 from pathlib import Path
 from typing import Iterable
-from transformers import AutoTokenizer
-
-BYTE_LEVEL_TOKENIZERS = {"ByT5Tokenizer", "ByT5TokenizerFast"}
+from transformers import AutoTokenizer, ByT5Tokenizer
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
@@ -26,7 +24,7 @@ def train_tokenizer(processed_text_dir: str, tokenizer_dir: str, base_model_name
     logging.info(f"Training tokenizer from data in {processed_text_dir}")
     tokenizer = AutoTokenizer.from_pretrained(base_model_name)
 
-    if tokenizer.__class__.__name__ in BYTE_LEVEL_TOKENIZERS:
+    if isinstance(tokenizer, ByT5Tokenizer):
         logging.info("ByT5 uses a fixed byte-level vocabulary; skipping tokenizer training.")
     else:
         iterator = _text_iterator(processed_text_dir)
