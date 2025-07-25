@@ -147,9 +147,9 @@ python3 scripts/train_llm.py \
     --processed_data_path ./processed_data/processed_text \
     --model_name gpt2 \
     --output_dir ./models/runyoro_llm_model \
-    --tokenizer_dir ./tokenizer
-    --checkpoint_dir /content/runyoro_checkpoints
-    --mixed_precision fp16
+    --tokenizer_dir ./tokenizer \
+    --checkpoint_dir /content/runyoro_checkpoints \
+    --mixed_precision fp16 \
     --num_train_epochs 5 \
     --use_wandb
 ```

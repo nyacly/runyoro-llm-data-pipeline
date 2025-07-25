@@ -528,7 +528,16 @@ if __name__ == "__main__":
         help="Disable mixed precision training (e.g., if encountering NaN gradients).",
     )
 
-    args = parser.parse_args()
+    # Use parse_known_args to gracefully handle any extra arguments
+    # that may get injected by environments like Jupyter or Colab.
+    # Unknown arguments are ignored but logged as a warning so the
+    # user is aware of potential typos or mismatches.
+    args, unknown_args = parser.parse_known_args()
+    if unknown_args:
+        logging.warning(
+            "Ignoring unrecognized arguments: %s",
+            " ".join(unknown_args),
+        )
     train_llm(
         processed_data_path=args.processed_data_path,
         model_name=args.model_name,
