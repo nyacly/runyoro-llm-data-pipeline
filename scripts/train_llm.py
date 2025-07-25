@@ -92,15 +92,17 @@ def train_llm(
     vocab_size: int = 5000,
     num_train_epochs: int = 5,
     per_device_train_batch_size: int = 8,
+    per_device_eval_batch_size: int = 8,
     save_steps: int = 5000,
     save_total_limit: int = 2,
     logging_steps: int = 10,
-    learning_rate: float = 1e-5,
-    warmup_steps: int = 5,
+    learning_rate: float = 5e-5,
+    warmup_steps: int = 500,
     weight_decay: float = 0.01,
     eval_steps: int = 500,
     gradient_accumulation_steps: int = 1,
     max_grad_norm: float = 1.0,
+    block_size: int = 512,
     cache_dir: str | None = None,
     checkpoint_dir: str | None = None,
     cleanup_checkpoints: bool = False,
@@ -126,7 +128,7 @@ def train_llm(
     Mixed precision can be enabled with ``mixed_precision='fp16'`` when running
     on a compatible GPU, but is disabled by default for stability.
 
-    ``warmup_steps`` now defaults to 5 so the scheduler quickly reaches the base
+    ``warmup_steps`` now defaults to 500 so the scheduler quickly reaches the base
     learning rate when training on small datasets.
 
     ``max_grad_norm`` can be adjusted to clip exploding gradients if training
@@ -205,7 +207,7 @@ def train_llm(
         tokenizer.add_special_tokens({"pad_token": "[PAD]"})
 
     def tokenize_function(examples):
-        tokens = tokenizer(examples["text"], truncation=True, max_length=512)
+        tokens = tokenizer(examples["text"], truncation=True, max_length=block_size)
         tokens["labels"] = tokens["input_ids"].copy()
         return tokens
 
@@ -280,6 +282,7 @@ def train_llm(
         "overwrite_output_dir": True,
         "num_train_epochs": num_train_epochs,
         "per_device_train_batch_size": per_device_train_batch_size,
+        "per_device_eval_batch_size": per_device_eval_batch_size,
         "save_steps": save_steps,
         "save_total_limit": save_total_limit,
         "logging_steps": logging_steps,
@@ -447,6 +450,12 @@ if __name__ == "__main__":
         help="Batch size per device during training.",
     )
     parser.add_argument(
+        "--per_device_eval_batch_size",
+        type=int,
+        default=8,
+        help="Batch size per device during evaluation.",
+    )
+    parser.add_argument(
         "--save_steps",
         type=int,
         default=5000,
@@ -467,13 +476,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--learning_rate",
         type=float,
-        default=1e-5,
+        default=5e-5,
         help="Learning rate for the optimizer.",
     )
     parser.add_argument(
         "--warmup_steps",
         type=int,
-        default=5,
+        default=500,
         help="Number of warmup steps for the learning rate scheduler.",
     )
     parser.add_argument(
@@ -499,6 +508,12 @@ if __name__ == "__main__":
         type=float,
         default=1.0,
         help="Maximum gradient norm (for gradient clipping).",
+    )
+    parser.add_argument(
+        "--block_size",
+        type=int,
+        default=512,
+        help="Maximum token length for model inputs.",
     )
     parser.add_argument(
         "--cache_dir",
@@ -539,6 +554,7 @@ if __name__ == "__main__":
         vocab_size=args.vocab_size,
         num_train_epochs=args.num_train_epochs,
         per_device_train_batch_size=args.per_device_train_batch_size,
+        per_device_eval_batch_size=args.per_device_eval_batch_size,
         save_steps=args.save_steps,
         save_total_limit=args.save_total_limit,
         logging_steps=args.logging_steps,
@@ -548,6 +564,7 @@ if __name__ == "__main__":
         eval_steps=args.eval_steps,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         max_grad_norm=args.max_grad_norm,
+        block_size=args.block_size,
         cache_dir=args.cache_dir,
         checkpoint_dir=args.checkpoint_dir,
         cleanup_checkpoints=args.cleanup_checkpoints,
