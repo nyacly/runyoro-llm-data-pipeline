@@ -10,6 +10,7 @@ from transformers import (
     Trainer,
     DataCollatorForSeq2Seq,
     TrainerCallback,
+    DataCollatorForLanguageModeling,
 )
 from scripts.tokenizer_utils import train_tokenizer
 import math
@@ -174,24 +175,24 @@ def train_llm(
         return tokens
 
     logging.info("Tokenizing dataset...")
-    raw = raw.map(
+    tokenized = raw.map(
         tokenize_fn,
         batched=True,
         remove_columns=["text"],
         num_proc=4,
     )
 
-    dataset = raw["train"]
-    logging.info(f"Dataset size: {len(dataset)} examples")
+    tokenized = tokenized["train"].train_test_split(test_size=0.1)
+    logging.info(f"Dataset size: {len(tokenized['train'])} examples")
 
-    if len(dataset) == 0:
+    if len(tokenized["train"]) == 0:
         raise ValueError(
             f"No training examples were found in {processed_data_full_path}."
             " Ensure the directory contains non-empty .txt files before running"
             " training."
         )
 
-    if len(dataset) < 10:
+    if len(tokenized["train"]) < 10:
         raise ValueError(
             "Training dataset must contain at least 10 examples to avoid "
             "unstable gradients. Add more data to processed_data/processed_text."
@@ -200,10 +201,7 @@ def train_llm(
     if learning_rate <= 0:
         raise ValueError("learning_rate must be greater than 0.")
 
-    # Ensure we have a validation split
-    dataset = dataset.train_test_split(test_size=0.1)
-
-    tokenized_datasets = dataset
+    tokenized_datasets = tokenized
 
     # Optional sanity check for NaNs in the tokenized dataset
     import numpy as np
@@ -237,147 +235,35 @@ def train_llm(
     )
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
         model.resize_token_embeddings(len(tokenizer))
+    # HF Trainer setup using a causal language modeling collator
+    data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
 
-    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
-    logging.info("Using DataCollatorForSeq2Seq for training.")
-
-    training_output_dir = checkpoint_dir if checkpoint_dir else output_dir
-
-    # Mixed precision setup
-    fp16 = False
-    bf16 = False
-    if mixed_precision == "fp16":
-        fp16 = True
-    elif mixed_precision == "bf16":
-        bf16 = True
-
-    # Adjust save and eval steps based on dataset size
-    num_examples = len(tokenized_datasets["train"])
-    if num_examples < 10000:
-        save_steps = min(save_steps, 500)
-        eval_steps = min(eval_steps, 250)
-    else:
-        save_steps = min(save_steps, 1000)
-        eval_steps = min(eval_steps, 500)
-
-    # Build arguments for TrainingArguments
-    import inspect
-
-    training_args_kwargs = {
-        "output_dir": training_output_dir,
-        "overwrite_output_dir": True,
-        "num_train_epochs": num_train_epochs,
-        "per_device_train_batch_size": per_device_train_batch_size,
-        "per_device_eval_batch_size": per_device_eval_batch_size,
-        "save_steps": save_steps,
-        "save_total_limit": save_total_limit,
-        "logging_steps": logging_steps,
-        "learning_rate": learning_rate,
-        "warmup_steps": warmup_steps,
-        "weight_decay": weight_decay,
-        "evaluation_strategy": "steps",
-        "eval_steps": eval_steps,
-        "gradient_accumulation_steps": gradient_accumulation_steps,
-        "max_grad_norm": max_grad_norm,
-        "fp16": fp16,
-        "bf16": bf16,
-        "run_name": "runyoro_llm_v2",
-        "report_to": ["wandb"] if use_wandb else None,
-    }
-
-    init_params = inspect.signature(TrainingArguments.__init__).parameters
-    filtered_kwargs = {
-        k: v for k, v in training_args_kwargs.items() if k in init_params
-    }
-
-    training_args = TrainingArguments(**filtered_kwargs)
-    logging.info(f"Actual warmup_steps used by Trainer: {training_args.warmup_steps}")
+    training_args = TrainingArguments(
+        output_dir=output_dir,
+        num_train_epochs=num_train_epochs,
+        per_device_train_batch_size=per_device_train_batch_size,
+        per_device_eval_batch_size=per_device_eval_batch_size,
+        learning_rate=learning_rate,
+        weight_decay=weight_decay,
+        warmup_steps=warmup_steps,
+        max_grad_norm=max_grad_norm,
+        fp16=torch.cuda.is_available(),
+        logging_steps=100,
+        save_steps=500,
+        save_total_limit=2,
+        report_to="none",
+    )
 
     trainer = Trainer(
-        model=model,
-        args=training_args,
-        train_dataset=train_dataset,
-        eval_dataset=eval_dataset,
+        model,
+        training_args,
+        train_dataset=tokenized_datasets["train"],
         data_collator=data_collator,
     )
-    trainer.add_callback(
-        NanDetectionCallback(train_dataset=train_dataset, tokenizer=tokenizer)
-    )
 
-    # --- Re-enabled Automated checkpoint resumption with robustness check ---
-    latest_checkpoint = None
-    if os.path.isdir(training_output_dir):
-        checkpoints = [
-            d for d in os.listdir(training_output_dir) if d.startswith("checkpoint-")
-        ]
-        if checkpoints:
-            # Sort by checkpoint number to find the true latest
-            checkpoints.sort(key=lambda x: int(x.split("-")[-1]))
-            candidate_checkpoint = os.path.join(training_output_dir, checkpoints[-1])
+    trainer.train()
+    trainer.save_model()
 
-            # --- ROBUSTNESS CHECK: Verify if the candidate checkpoint is actually valid ---
-            # A valid checkpoint should at least contain the model weights
-            # It could be \'model.safetensors\' or \'pytorch_model.bin\' depending on save format
-            model_safetensors_exists = os.path.exists(
-                os.path.join(candidate_checkpoint, "model.safetensors")
-            )
-            pytorch_model_exists = os.path.exists(
-                os.path.join(candidate_checkpoint, "pytorch_model.bin")
-            )
-
-            if model_safetensors_exists or pytorch_model_exists:
-                latest_checkpoint = candidate_checkpoint
-                logging.info(
-                    f"Found and validated latest checkpoint: {latest_checkpoint}"
-                )
-            else:
-                logging.warning(
-                    f"Found checkpoint folder '{candidate_checkpoint}' but it appears incomplete (missing model files). Starting fresh."
-                )
-                # If incomplete, treat as if no valid checkpoint was found
-                latest_checkpoint = None
-        else:
-            logging.info(
-                "No checkpoint folders found in output directory. Starting fresh."
-            )
-    else:
-        logging.info(
-            "Output directory does not exist. Starting fresh."
-        )  # This might not happen often if you create it earlier
-
-    # Proceed with training or resumption
-    if latest_checkpoint:
-        logging.info(f"Resuming training from checkpoint: {latest_checkpoint}")
-        try:
-            trainer.train(resume_from_checkpoint=latest_checkpoint)
-        except RuntimeError as e:
-            logging.error(
-                f"Failed to load checkpoint due to incompatible model parameters: {e}"
-            )
-            logging.info("Starting training from scratch instead.")
-            trainer.train()
-    else:
-        logging.info("Starting training fresh (no valid checkpoint found).")
-        trainer.train()
-
-    logging.info(f"Saving final model to {training_output_dir}/final_model")
-    trainer.save_model(f"{training_output_dir}/final_model")
-    tokenizer.save_pretrained(f"{training_output_dir}/final_model")
-
-    if training_output_dir != output_dir:
-        final_dest = os.path.join(output_dir, "final_model")
-        os.makedirs(output_dir, exist_ok=True)
-        logging.info(f"Copying final model to {final_dest}")
-        shutil.copytree(
-            os.path.join(training_output_dir, "final_model"),
-            final_dest,
-            dirs_exist_ok=True,
-        )
-        if cleanup_checkpoints:
-            logging.info(f"Cleaning up checkpoint directory {training_output_dir}")
-            shutil.rmtree(training_output_dir, ignore_errors=True)
-
-    logging.info("Training complete.")
 
 
 if __name__ == "__main__":
