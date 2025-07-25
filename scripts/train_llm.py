@@ -246,51 +246,51 @@ def train_llm(
 
     fp16 = False
     bf16 = False
-# Mixed precision setup (choose one approach)
+    # Mixed precision setup (choose one approach)
 
-# APPROACH 1: Simple and safe (recommended for debugging)
-no_mixed_precision = True  # Set to True to disable mixed precision
-if not no_mixed_precision:
-    if mixed_precision == "fp16":
-        fp16 = True
-    elif mixed_precision == "bf16":
-        bf16 = True
-else:
-    fp16 = False
-    bf16 = False
-
-# APPROACH 2: With CUDA checking (use this if you want mixed precision)
-"""
-import torch
-if mixed_precision in {"fp16", "bf16"}:
-    if not torch.cuda.is_available():
-        logging.warning(
-            "CUDA not available; disabling mixed precision to avoid NaNs."
-        )
-        mixed_precision = None
+    # APPROACH 1: Simple and safe (recommended for debugging)
+    no_mixed_precision = True  # Set to True to disable mixed precision
+    if not no_mixed_precision:
+        if mixed_precision == "fp16":
+            fp16 = True
+        elif mixed_precision == "bf16":
+            bf16 = True
+    else:
         fp16 = False
         bf16 = False
-    elif mixed_precision == "fp16":
-        fp16 = True
-        bf16 = False
-    elif mixed_precision == "bf16":
-        fp16 = False
-        bf16 = True
-else:
-    fp16 = False
-    bf16 = False
-"""
 
-# Adjust save and eval steps based on dataset size
-# ``train_dataset`` may not be defined yet if earlier logic changes,
-# so base the calculation on ``tokenized_datasets`` directly.
-num_examples = len(tokenized_datasets["train"])
-if num_examples < 10000:
-    save_steps = min(save_steps, 500)
-    eval_steps = min(eval_steps, 250)
-else:
-    save_steps = min(save_steps, 1000)
-    eval_steps = min(eval_steps, 500)
+    # APPROACH 2: With CUDA checking (use this if you want mixed precision)
+    """
+    import torch
+    if mixed_precision in {"fp16", "bf16"}:
+        if not torch.cuda.is_available():
+            logging.warning(
+                "CUDA not available; disabling mixed precision to avoid NaNs."
+            )
+            mixed_precision = None
+            fp16 = False
+            bf16 = False
+        elif mixed_precision == "fp16":
+            fp16 = True
+            bf16 = False
+        elif mixed_precision == "bf16":
+            fp16 = False
+            bf16 = True
+    else:
+        fp16 = False
+        bf16 = False
+    """
+
+    # Adjust save and eval steps based on dataset size
+    # ``train_dataset`` may not be defined yet if earlier logic changes,
+    # so base the calculation on ``tokenized_datasets`` directly.
+    num_examples = len(tokenized_datasets["train"])
+    if num_examples < 10000:
+        save_steps = min(save_steps, 500)
+        eval_steps = min(eval_steps, 250)
+    else:
+        save_steps = min(save_steps, 1000)
+        eval_steps = min(eval_steps, 500)
 
     # Build arguments for TrainingArguments but ensure compatibility with older
     # Transformers versions that may not support some parameters like
