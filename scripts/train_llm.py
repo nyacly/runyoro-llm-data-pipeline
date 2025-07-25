@@ -2,7 +2,7 @@ import os
 import argparse
 import logging
 import shutil
-from datasets import Dataset, load_dataset
+from datasets import load_dataset
 from transformers import (
     T5Tokenizer,
     AutoModelForSeq2SeqLM,
@@ -146,35 +146,16 @@ def train_llm(
             f"Processed data directory not found: {processed_data_full_path}"
         )
 
-    try:
-        dataset = load_dataset(
-            "text",
-            data_files=f"{processed_data_full_path}/*.txt",
-            cache_dir=cache_dir or "/tmp/hf_datasets_cache",
-            keep_in_memory=True,
-        )["train"]
-    except NotImplementedError as e:
-        if "LocalFileSystem" in str(e):
-            logging.warning(
-                "In-memory loading not supported on this 'datasets' version; falling back to manual loading."
-            )
-            # Manually read the text files and create the Dataset in-memory.
-            # Each non-empty line is treated as a separate training example so
-            # we preserve the same semantics as ``load_dataset("text")``.
-            import glob
+    data_files = {"train": os.path.join(processed_data_full_path, "*.txt")}
+    raw = load_dataset(
+        "text",
+        data_files=data_files,
+        cache_dir=cache_dir or "/tmp/hf_datasets_cache",
+    )
+    # filter empty lines
+    raw = raw.filter(lambda ex: bool(ex["text"].strip()))
 
-            text_files = sorted(glob.glob(f"{processed_data_full_path}/*.txt"))
-            texts = []
-            for path in text_files:
-                with open(path, "r", encoding="utf-8") as f:
-                    for line in f:
-                        line = line.strip()
-                        if line:
-                            texts.append(line)
-
-            dataset = Dataset.from_dict({"text": texts})
-        else:
-            raise
+    dataset = raw["train"]
     logging.info(f"Dataset size: {len(dataset)} examples")
 
     if len(dataset) == 0:
