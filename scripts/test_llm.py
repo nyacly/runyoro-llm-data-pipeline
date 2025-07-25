@@ -9,13 +9,20 @@ The Runyoro LLM is based on MT5 (a sequence-to-sequence model), so we need
 such as ``Unrecognized configuration class ... MT5Config`` during loading.
 """
 
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, GenerationConfig
-import torch
 import os
+import pytest
+try:
+    from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, GenerationConfig
+    import torch
+    HAS_DEP = True
+except Exception:  # noqa: PIE786
+    HAS_DEP = False
+    AutoTokenizer = AutoModelForSeq2SeqLM = GenerationConfig = None
+    torch = None
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-def test_llm(
+def generate_llm(
     model_path: str,
     prompt: str = "",
     max_new_tokens: int = 100,
@@ -98,6 +105,24 @@ def test_llm(
 
     logging.info("Testing complete.")
 
+
+MODEL_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "..",
+    "models",
+    "runyoro_llm_model",
+    "final_model",
+)
+
+
+@pytest.mark.skipif(
+    not HAS_DEP or not os.path.isdir(MODEL_PATH),
+    reason="Dependencies or model not available",
+)
+def test_generate_llm_basic():
+    """Lightweight test to ensure generation code executes."""
+    generate_llm(model_path=MODEL_PATH, prompt="test", max_new_tokens=1)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Test a trained LLM for Runyoro/Rutooro.")
     parser.add_argument(
@@ -162,7 +187,7 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    test_llm(
+    generate_llm(
         model_path=args.model_path,
         prompt=args.prompt,
         max_new_tokens=args.max_new_tokens,
