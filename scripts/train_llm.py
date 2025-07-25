@@ -4,7 +4,7 @@ import logging
 import shutil
 from datasets import Dataset, load_dataset
 from transformers import (
-    T5TokenizerFast,
+    T5Tokenizer,
     AutoModelForSeq2SeqLM,
     TrainingArguments,
     Trainer,
@@ -62,11 +62,11 @@ class NanDetectionCallback(TrainerCallback):
             if nan_loc is not None:
                 idx, col = nan_loc
                 logging.warning(
-                    f"NaN detected in training data at index {idx} column '{col}'."
+                    f"NaN detected in training data at index {idx} column \'{col}\'."
                 )
                 if self.tokenizer is not None:
                     problematic_example = self.train_dataset[idx]
-                    decoded_text = self.tokenizer.decode(problematic_example['input_ids'])
+                    decoded_text = self.tokenizer.decode(problematic_example["input_ids"])
                     with open("problematic_examples.txt", "a") as f:
                         f.write(f"Index: {idx}, Column: {col}\\n")
                         f.write(f"Text: {decoded_text}\\n\\n")
@@ -97,9 +97,8 @@ def train_llm(
     cache_dir: str | None = None,
     checkpoint_dir: str | None = None,
     cleanup_checkpoints: bool = False,
-    mixed_precision: str | None = "fp16",
+    mixed_precision: str | None = None,
     use_wandb: bool = False,
-    no_mixed_precision: bool = False,
 ):
     """Train or resume a sequence-to-sequence language model.
 
@@ -146,7 +145,7 @@ def train_llm(
     except NotImplementedError as e:
         if "LocalFileSystem" in str(e):
             logging.warning(
-                "In-memory loading not supported on this 'datasets' version; falling back to manual loading."
+                "In-memory loading not supported on this \'datasets\' version; falling back to manual loading."
             )
             # Manually read the text files and create the Dataset in-memory.
             # Each non-empty line is treated as a separate training example so
@@ -189,7 +188,7 @@ def train_llm(
     dataset = dataset.train_test_split(test_size=0.1)
 
     # Filter out empty or very short examples
-    dataset = dataset.filter(lambda example: len(example['text']) > 10)
+    dataset = dataset.filter(lambda example: len(example["text"]) > 10)
 
     logging.info("Training/Updating tokenizer...")
     tokenizer = train_tokenizer(
@@ -233,8 +232,9 @@ def train_llm(
     eval_dataset = tokenized_datasets["test"]
 
     logging.info(f"Loading model: {model_name}")
+    # Load model with 8-bit quantization to reduce memory usage
     model = AutoModelForSeq2SeqLM.from_pretrained(
-        model_name, ignore_mismatched_sizes=True
+        model_name, ignore_mismatched_sizes=True, load_in_8bit=True
     )
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
         model.resize_token_embeddings(len(tokenizer))
@@ -244,34 +244,15 @@ def train_llm(
 
     training_output_dir = checkpoint_dir if checkpoint_dir else output_dir
 
+    # Mixed precision setup
     fp16 = False
     bf16 = False
-    # Mixed precision setup (choose one approach)
-
-    # APPROACH 1: Simple and safe (recommended for debugging)
-
-    import torch
-    if mixed_precision in {"fp16", "bf16"}:
-        if not torch.cuda.is_available():
-            logging.warning(
-                "CUDA not available; disabling mixed precision to avoid NaNs."
-            )
-            mixed_precision = None
-            fp16 = False
-            bf16 = False
-        elif mixed_precision == "fp16":
-            fp16 = True
-            bf16 = False
-        elif mixed_precision == "bf16":
-            fp16 = False
-            bf16 = True
-    else:
-        fp16 = False
-        bf16 = False
+    if mixed_precision == "fp16":
+        fp16 = True
+    elif mixed_precision == "bf16":
+        bf16 = True
 
     # Adjust save and eval steps based on dataset size
-    # ``train_dataset`` may not be defined yet if earlier logic changes,
-    # so base the calculation on ``tokenized_datasets`` directly.
     num_examples = len(tokenized_datasets["train"])
     if num_examples < 10000:
         save_steps = min(save_steps, 500)
@@ -280,9 +261,7 @@ def train_llm(
         save_steps = min(save_steps, 1000)
         eval_steps = min(eval_steps, 500)
 
-    # Build arguments for TrainingArguments but ensure compatibility with older
-    # Transformers versions that may not support some parameters like
-    # ``evaluation_strategy``.
+    # Build arguments for TrainingArguments
     import inspect
 
     training_args_kwargs = {
@@ -336,7 +315,7 @@ def train_llm(
 
             # --- ROBUSTNESS CHECK: Verify if the candidate checkpoint is actually valid ---
             # A valid checkpoint should at least contain the model weights
-            # It could be 'model.safetensors' or 'pytorch_model.bin' depending on save format
+            # It could be \'model.safetensors\' or \'pytorch_model.bin\' depending on save format
             model_safetensors_exists = os.path.exists(
                 os.path.join(candidate_checkpoint, "model.safetensors")
             )
@@ -351,7 +330,7 @@ def train_llm(
                 )
             else:
                 logging.warning(
-                    f"Found checkpoint folder '{candidate_checkpoint}' but it appears incomplete (missing model files). Starting fresh."
+                    f"Found checkpoint folder \'{candidate_checkpoint}\' but it appears incomplete (missing model files). Starting fresh."
                 )
                 # If incomplete, treat as if no valid checkpoint was found
                 latest_checkpoint = None
@@ -455,22 +434,46 @@ if __name__ == "__main__":
         help="Batch size per device during training.",
     )
     parser.add_argument(
+        "--save_steps",
+        type=int,
+        default=5000,
+        help="Number of updates steps before saving checkpoint.",
+    )
+    parser.add_argument(
         "--save_total_limit",
         type=int,
         default=2,
-        help="Total number of checkpoints to keep during training.",
+        help="Total number of checkpoints to store.",
+    )
+    parser.add_argument(
+        "--logging_steps",
+        type=int,
+        default=10,
+        help="Number of update steps between two logs.",
     )
     parser.add_argument(
         "--learning_rate",
         type=float,
         default=1e-5,
-        help="Learning rate for training.",
+        help="Learning rate for the optimizer.",
     )
     parser.add_argument(
         "--warmup_steps",
         type=int,
         default=5,
-        help="Warmup steps for the scheduler.",
+        help="Number of warmup steps for the learning rate scheduler.",
+    )
+    parser.add_argument(
+        "--weight_decay",
+        type=float,
+        default=0.01,
+        help="Weight decay for regularization.",
+    )
+    parser.add_argument(
+        "--eval_steps",
+        type=int,
+        default=500,
+        help="Number of update steps between two evaluations.",
     )
     parser.add_argument(
         "--gradient_accumulation_steps",
@@ -482,50 +485,34 @@ if __name__ == "__main__":
         "--max_grad_norm",
         type=float,
         default=1.0,
-        help="Maximum gradient norm for clipping to avoid exploding gradients.",
+        help="Maximum gradient norm (for gradient clipping).",
     )
     parser.add_argument(
         "--cache_dir",
         type=str,
         default=None,
-        help="Optional directory for Hugging Face dataset cache.",
+        help="Directory for caching downloaded models and datasets.",
     )
     parser.add_argument(
         "--cleanup_checkpoints",
         action="store_true",
-        help="Remove checkpoint_dir after copying the final model to output_dir.",
+        help="Whether to clean up intermediate checkpoints after training.",
     )
     parser.add_argument(
         "--mixed_precision",
         type=str,
-        choices=["fp16", "bf16"],
         default="fp16",
-        help=(
-            "Enable mixed precision training (fp16 or bf16). If not set, training"
-            " runs in full precision."
-        ),
+        choices=["no", "fp16", "bf16"],
+        help="Whether to use mixed precision training (no, fp16, bf16).",
     )
     parser.add_argument(
         "--use_wandb",
         action="store_true",
-        help="Log metrics to Weights & Biases during training.",
-    )
-    parser.add_argument(
-        "--no_mixed_precision",
-        action="store_true",
-        help="Disable mixed precision training (e.g., if encountering NaN gradients).",
+        help="Whether to use Weights & Biases for logging.",
     )
 
-    # Use parse_known_args to gracefully handle any extra arguments
-    # that may get injected by environments like Jupyter or Colab.
-    # Unknown arguments are ignored but logged as a warning so the
-    # user is aware of potential typos or mismatches.
-    args, unknown_args = parser.parse_known_args()
-    if unknown_args:
-        logging.warning(
-            "Ignoring unrecognized arguments: %s",
-            " ".join(unknown_args),
-        )
+    args = parser.parse_args()
+
     train_llm(
         processed_data_path=args.processed_data_path,
         model_name=args.model_name,
@@ -534,15 +521,20 @@ if __name__ == "__main__":
         vocab_size=args.vocab_size,
         num_train_epochs=args.num_train_epochs,
         per_device_train_batch_size=args.per_device_train_batch_size,
+        save_steps=args.save_steps,
+        save_total_limit=args.save_total_limit,
+        logging_steps=args.logging_steps,
         learning_rate=args.learning_rate,
         warmup_steps=args.warmup_steps,
+        weight_decay=args.weight_decay,
+        eval_steps=args.eval_steps,
         gradient_accumulation_steps=args.gradient_accumulation_steps,
         max_grad_norm=args.max_grad_norm,
         cache_dir=args.cache_dir,
         checkpoint_dir=args.checkpoint_dir,
-        save_total_limit=args.save_total_limit,
         cleanup_checkpoints=args.cleanup_checkpoints,
         mixed_precision=args.mixed_precision,
         use_wandb=args.use_wandb,
-        no_mixed_precision=args.no_mixed_precision,
     )
+
+
