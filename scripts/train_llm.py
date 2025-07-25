@@ -272,7 +272,9 @@ else:
 """
 
 # Adjust save and eval steps based on dataset size
-num_examples = len(train_dataset)
+# ``train_dataset`` may not be defined yet if earlier logic changes,
+# so base the calculation on ``tokenized_datasets`` directly.
+num_examples = len(tokenized_datasets["train"])
 if num_examples < 10000:
     save_steps = min(save_steps, 500)
     eval_steps = min(eval_steps, 250)
