@@ -138,12 +138,7 @@ def train_llm(
     ``max_grad_norm`` can be adjusted to clip exploding gradients if training
     becomes unstable.
     """
-    from bitsandbytes.cuda_setup.main import CUDASetup
     import torch
-
-    CUDASetup.get_instance().run_cuda_setup()
-    if torch.cuda.is_available():
-        assert CUDASetup.get_instance().cuda_available, "bitsandbytes failed to detect CUDA"
     logging.info(f"Loading dataset from {processed_data_path}")
 
     processed_data_full_path = os.path.join(os.getcwd(), processed_data_path)
