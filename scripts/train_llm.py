@@ -12,6 +12,7 @@ from transformers import (
     TrainerCallback,
     DataCollatorForLanguageModeling,
 )
+from peft import LoraConfig, get_peft_model
 from scripts.tokenizer_utils import train_tokenizer
 import math
 
@@ -233,6 +234,14 @@ def train_llm(
     model = AutoModelForSeq2SeqLM.from_pretrained(
         model_name, ignore_mismatched_sizes=True, **quant_args
     )
+    lora_cfg = LoraConfig(
+        r=8,
+        lora_alpha=32,
+        lora_dropout=0.05,
+        target_modules=['q', 'v'],
+        task_type='CAUSAL_LM',
+    )
+    model = get_peft_model(model, lora_cfg)
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
         model.resize_token_embeddings(len(tokenizer))
     # HF Trainer setup using a causal language modeling collator
