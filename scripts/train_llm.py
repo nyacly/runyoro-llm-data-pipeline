@@ -12,10 +12,9 @@ from transformers import (
     Trainer,
     DataCollatorForSeq2Seq,
     TrainerCallback,
-    DataCollatorForLanguageModeling,
 )
 from peft import LoraConfig, get_peft_model
-from scripts.tokenizer_utils import train_tokenizer
+from tokenizer_utils import train_tokenizer
 import math
 
 
@@ -78,8 +77,8 @@ class NanDetectionCallback(TrainerCallback):
                         problematic_example["input_ids"]
                     )
                     with open("problematic_examples.txt", "a") as f:
-                        f.write(f"Index: {idx}, Column: {col}\\n")
-                        f.write(f"Text: {decoded_text}\\n\\n")
+                        f.write(f"Index: {idx}, Column: {col}\n")
+                        f.write(f"Text: {decoded_text}\n\n")
             control.should_training_stop = True
 
 
@@ -139,6 +138,7 @@ def train_llm(
     becomes unstable.
     """
     import torch
+
     logging.info(f"Loading dataset from {processed_data_path}")
 
     processed_data_full_path = os.path.join(os.getcwd(), processed_data_path)
@@ -242,13 +242,14 @@ def train_llm(
         lora_alpha=32,
         lora_dropout=0.05,
         target_modules=['q', 'v'],
-        task_type='CAUSAL_LM',
+        task_type='SEQ_2_SEQ_LM',
     )
     model = get_peft_model(model, lora_cfg)
     if tokenizer.pad_token is not None and model.config.vocab_size < len(tokenizer):
         model.resize_token_embeddings(len(tokenizer))
-    # HF Trainer setup using a causal language modeling collator
-    data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
+    
+    # Use a Seq2Seq collator for T5-style models
+    data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
     training_args = TrainingArguments(
         output_dir=output_dir,
@@ -259,17 +260,19 @@ def train_llm(
         weight_decay=weight_decay,
         warmup_steps=warmup_steps,
         max_grad_norm=max_grad_norm,
-        fp16=torch.cuda.is_available(),
+        fp16=(mixed_precision == 'fp16' and torch.cuda.is_available()),
+        bf16=(mixed_precision == 'bf16' and torch.cuda.is_available()),
         logging_steps=100,
         save_steps=500,
         save_total_limit=2,
-        report_to="none",
+        report_to="wandb" if use_wandb else "none",
     )
 
     trainer = Trainer(
         model,
         training_args,
         train_dataset=tokenized_datasets["train"],
+        eval_dataset=tokenized_datasets["test"],
         data_collator=data_collator,
     )
 
