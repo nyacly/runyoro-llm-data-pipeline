@@ -33,6 +33,7 @@ def generate_llm(
     top_p: float = 0.95,
     no_repeat_ngram_size: int | None = 2,
     num_beams: int | None = None,
+    do_sample: bool = False,
 ):
     """Generate text using a trained model with flexible decoding parameters.
 
@@ -75,20 +76,16 @@ def generate_llm(
         attention_mask = attention_mask.to("cuda")
 
     logging.info("Starting text generation...")
-    gen_config = GenerationConfig(
-        max_new_tokens=max_new_tokens,
-        temperature=temperature,
-        repetition_penalty=repetition_penalty,
-        no_repeat_ngram_size=no_repeat_ngram_size,
-        top_k=top_k,
-        top_p=top_p,
-        num_return_sequences=num_return_sequences,
-    )
-    if num_beams:
-        gen_config.num_beams = num_beams
-        gen_config.do_sample = False
-    else:
-        gen_config.do_sample = True
+    gen_kwargs = {
+        "max_new_tokens": max_new_tokens,
+        "num_beams": num_beams,
+        "num_return_sequences": num_return_sequences,
+        "do_sample": do_sample,
+        "temperature": temperature,
+        "top_k": top_k,
+        "top_p": top_p,
+    }
+    gen_config = GenerationConfig(**gen_kwargs)
 
     generated_ids = model.generate(
         input_ids=input_ids,
@@ -146,26 +143,28 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num_return_sequences",
         type=int,
-        default=3,
-        help="Number of sequences to generate.",
+        default=1,
+        help=(
+            "How many sequences to return (only works when num_beams>1 or do_sample)."
+        ),
     )
     parser.add_argument(
         "--temperature",
         type=float,
-        default=0.7,
-        help="Sampling temperature (higher values = more randomness).",
+        default=1.0,
+        help="Sampling temperature (higher \u2192 more random).",
     )
     parser.add_argument(
         "--top_k",
         type=int,
         default=50,
-        help="Sample from the top k tokens.",
+        help="Keep only top_k tokens by probability during sampling.",
     )
     parser.add_argument(
         "--top_p",
         type=float,
-        default=0.95,
-        help="Nucleus sampling probability threshold.",
+        default=0.9,
+        help="Keep the smallest set of tokens with cumulative prob \u2265 top_p.",
     )
     parser.add_argument(
         "--no_repeat_ngram_size",
@@ -182,8 +181,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num_beams",
         type=int,
-        default=None,
-        help="Use beam search with this many beams (disables sampling).",
+        default=1,
+        help="Number of beams for beam-search (1 = greedy).",
+    )
+    parser.add_argument(
+        "--do_sample",
+        action="store_true",
+        help="Whether to use sampling instead of greedy decoding.",
     )
 
     args = parser.parse_args()
@@ -198,6 +202,7 @@ if __name__ == "__main__":
         repetition_penalty=args.repetition_penalty,
         no_repeat_ngram_size=args.no_repeat_ngram_size,
         num_beams=args.num_beams,
+        do_sample=args.do_sample,
     )
 
 
